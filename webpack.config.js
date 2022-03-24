@@ -7,6 +7,7 @@ module.exports = {
     regeneratorRuntime: 'regenerator-runtime/runtime',
     index: './src/index.js',
     firebaseConfig: './src/firebaseConfig.js',
+    jsPsychPavlovia: './src/jsPsychPavlovia.js',
   },
   devtool: 'inline-source-map',
   devServer: {
