@@ -1,3 +1,5 @@
+image: node:17
+
 stages:
   - install
   - build
