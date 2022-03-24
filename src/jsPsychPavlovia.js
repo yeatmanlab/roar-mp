@@ -12,7 +12,7 @@
  * @license Distributed under the terms of the MIT License
  */
 
-export const jsPsychPavlovia = (function (jsPsych) {
+export const jsPsychPavlovia = (jsPsych) => {
   'use strict';
 
   /**
@@ -648,4 +648,4 @@ export const jsPsychPavlovia = (function (jsPsych) {
   };
 
   return PavloviaPlugin;
-})(jsPsychModule);
+};

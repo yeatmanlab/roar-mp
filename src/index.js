@@ -84,7 +84,7 @@ const timeline = [];
 
 /* init connection with pavlovia.org */
 const pavloviaInit = {
-  type: jsPsychPavlovia,
+  type: jsPsychPavlovia(jsPsych),
   command: 'init',
 };
 timeline.push(pavloviaInit);
@@ -481,7 +481,7 @@ timeline.push(IBIEnd);
 
 /* finish connection with pavlovia.org */
 const pavloviaFinish = {
-  type: jsPsychPavlovia,
+  type: jsPsychPavlovia(jsPsych),
   command: 'finish',
   participantId,
 };
