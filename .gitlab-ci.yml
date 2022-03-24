@@ -1,14 +1,19 @@
+stages:
+  - install
+  - build
+
 install:
   stage: install
   script:
     - npm install
   artifacts:
-    name: "artifacts"
+    name: 'artifacts'
     untracked: true
     expire_in: 30 mins
     paths:
       - .npm/
       - node_modules/
+
 build:
   stage: build
   script:
@@ -19,5 +24,3 @@ build:
     expire_in: 30 mins
   dependencies:
     - install
-
-    
