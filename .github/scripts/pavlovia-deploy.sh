@@ -10,7 +10,7 @@ build_command() {
 }
 
 echo -e "\033[0;32mDeleting old content...\033[0m"
-rm -rf $directory
+rm -rf $directory && git fetch
 
 echo -e "\033[0;32mChecking out $branch....\033[0m"
 git worktree add $directory $branch
