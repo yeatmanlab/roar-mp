@@ -1,0 +1,32 @@
+name: Build and push dist to Pavlovia
+on: [push, pull_request]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Node '17'
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v2
+      - name: Use Node.js 17
+        uses: actions/setup-node@v2
+        with:
+          node-version: '17'
+          cache: 'npm'
+      - name: Upgrade npm
+        run: npm i -g npm@latest
+      - name: Install and Build 🔧
+        run: |
+          npm ci
+          npm run build
+      - name: Push to Pavlovia 🐕
+        run: |
+          echo Push repo to gitlab
+          git subtree split -P dist -b dist
+          cd dist
+          git init
+          git config user.name "richford"
+          git config user.email "richiehalford@gmail.com"
+          git add .
+          git commit -m "Update dist on Pavlovia"
+          git remote add origin "https://oauth2:${token}@gitlab.com/chuang_/jskara-web.git"
+          git push origin -u main
