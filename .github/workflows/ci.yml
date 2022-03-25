@@ -20,13 +20,6 @@ jobs:
           npm run build
       - name: Push to Pavlovia 🐕
         run: |
-          echo Push repo to gitlab
-          git subtree split -P dist -b dist
-          cd dist
-          git init
-          git config user.name "richford"
-          git config user.email "richiehalford@gmail.com"
-          git add .
-          git commit -m "Update dist on Pavlovia"
-          git remote add origin "https://oauth2:${token}@gitlab.com/chuang_/jskara-web.git"
-          git push origin -u main
+          ./pavlovia-deploy.sh
+        env:
+          GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
