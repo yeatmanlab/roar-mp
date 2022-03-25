@@ -10,6 +10,8 @@
  * @copyright (c) 2017-2020 Ilixa Ltd. (http://ilixa.com) (c) 2020-2021 Open Science Tools Ltd.
  *   (https://opensciencetools.org)
  * @license Distributed under the terms of the MIT License
+ *
+ * With edits by: Adam Richie-Halford <richiehalford@gmail.com>
  */
 
 /**
@@ -20,6 +22,8 @@
  *
  * @author Alain Pitiot
  * @see {@link https://pavlovia.org/docs/experiments/create-jsPsych Running jsPsych experiments from Pavlovia}
+ *
+ * With edits by: Adam Richie-Halford <richiehalford@gmail.com>
  */
 class PavloviaPlugin {
   constructor(jsPsych) {

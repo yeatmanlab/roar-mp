@@ -12,7 +12,8 @@ import 'regenerator-runtime/runtime';
 import { RoarFirekit } from '@bdelab/roar-firekit';
 
 // import bullsEye from './img/bullsEye.png';
-import asteroidAttackIntro from './video/Asteroid_Attack_Intro.mp4';
+import asteroidAttackIntro1 from './video/Asteroid_Attack_Intro1.mp4';
+import asteroidAttackIntro2 from './video/Asteroid_Attack_Intro2.mp4';
 import asteroidAttackEnd from './video/Asteroid_Attack_End.mp4';
 import asteroidAttackLevelUp1 from './video/Asteroid_Attack_Level_Up_1.mp4';
 import asteroidAttackLevelUp2 from './video/Asteroid_Attack_Level_Up_2.mp4';
@@ -158,7 +159,7 @@ timeline.push(welcome);
 const intro1 = {
   type: videoKeyboardResponse,
   // on_start: setHtmlBgGray,
-  stimulus: [asteroidAttackIntro],
+  stimulus: [asteroidAttackIntro1],
   choices: [' '],
   response_allowed_while_playing: false,
   trial_duration: null,
@@ -166,6 +167,18 @@ const intro1 = {
   height: 800,
 };
 timeline.push(intro1);
+
+const intro2 = {
+  type: videoKeyboardResponse,
+  // on_start: setHtmlBgGray,
+  stimulus: [asteroidAttackIntro2],
+  choices: [' '],
+  response_allowed_while_playing: false,
+  trial_duration: null,
+  width: 1238,
+  height: 800,
+};
+timeline.push(intro2);
 
 // const fixation = {
 //   type: imageKeyboardResponse,
