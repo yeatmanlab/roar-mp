@@ -20,6 +20,8 @@ build_command
 
 echo -e "\033[0;32mDeploying $branch branch...\033[0m"
 cd $directory &&
+  git config user.email "richiehalford@gmail.com" &&
+  git config user.name "GitHub Action on behalf of Adam Richie-Halford" &&
   git add --all &&
   git commit -m "Deploy updates" &&
   git remote add $remote $url &&
