@@ -1,5 +1,9 @@
 name: Build and push dist to Pavlovia
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - main
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -20,6 +24,6 @@ jobs:
           npm run build
       - name: Push to Pavlovia 🐕
         run: |
-          ./pavlovia-deploy.sh
+          ./.github/scripts/pavlovia-deploy.sh
         env:
           GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
