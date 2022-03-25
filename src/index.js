@@ -210,13 +210,11 @@ const testBlock = {
   on_finish: function (data) {
     // eslint-disable-next-line no-param-reassign, eqeqeq
     data.accuracy = data.correct_choice == data.response;
-    firekit.writeTrial({
-      ...data,
-      grade,
-      condition: jsPsych.timelineVariable('condition'),
-      blockType: 'test',
-      participant: participantId,
-    });
+    data.grade = grade;
+    data.participant = participantId;
+    data.blockType = 'test';
+    data.condition = jsPsych.timelineVariable('condition');
+    firekit.writeTrial(data);
   },
 };
 
@@ -252,13 +250,11 @@ const practiceBlock = {
   on_finish: function (data) {
     // eslint-disable-next-line no-param-reassign, eqeqeq
     data.accuracy = data.correct_choice == data.response;
-    firekit.writeTrial({
-      ...data,
-      grade,
-      condition: jsPsych.timelineVariable('condition'),
-      blockType: 'practice',
-      participant: participantId,
-    });
+    data.grade = grade;
+    data.participant = participantId;
+    data.blockType = 'practice';
+    data.condition = jsPsych.timelineVariable('condition');
+    firekit.writeTrial(data);
   },
 };
 
