@@ -1,5 +1,3 @@
-import { ParameterType } from 'jspsych';
-
 /* eslint-disable */
 /**
  * jsPsych plugin (version > 7.0) for pavlovia.org
@@ -617,26 +615,26 @@ PavloviaPlugin.info = {
   description: 'communication with pavlovia.org',
   parameters: {
     command: {
-      type: ParameterType.STRING,
+      type: 1,
       pretty_name: 'Command',
       default: 'init',
       description: 'The pavlovia command: "init" (default) or "finish"',
     },
     participantId: {
-      type: ParameterType.STRING,
+      type: 1,
       pretty_name: 'Participant Id',
       default: 'PARTICIPANT',
       description: 'The participant Id: "PARTICIPANT" (default) or any string',
     },
     errorCallback: {
-      type: ParameterType.FUNCTION,
+      type: 4,
       pretty_name: 'ErrorCallback',
       default: PavloviaPlugin.defaultErrorCallback,
       description:
         'The callback function called whenever an error has occurred',
     },
     dataFilter: {
-      type: ParameterType.FUNCTION,
+      type: 4,
       pretty_name: 'DataFilter',
       default: PavloviaPlugin.defaultDataFilter,
       description:
