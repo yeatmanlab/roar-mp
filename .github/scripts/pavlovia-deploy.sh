@@ -2,7 +2,7 @@
 directory=dist
 branch=pavlovia
 remote=pavlovia
-url=https://github-ci-pavlovia:$GITLAB_TOKEN@gitlab.com/richford/asteroid-attack.git
+url=https://github-ci-pavlovia:$GITLAB_TOKEN@gitlab.pavlovia.org/richford/asteroid-attack.git
 
 build_command() {
   npm run build
