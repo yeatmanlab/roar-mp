@@ -204,8 +204,8 @@ const testBlock = {
   correct_choice: [jsPsych.timelineVariable('correct_choice')],
   RDK_type: 3, // The type of RDK used
   aperture_type: 1, // Circle
-  aperture_center_x: 960, // window.innerWidth/2,
-  aperture_center_y: 540, // window.innerHeight/2,
+  aperture_center_x: window.innerWidth / 2,
+  aperture_center_y: window.innerHeight / 2,
   aperture_width: 700, // Matches 14deg diameter
   choices: ['a', 'l'], // Choices available to be keyed in by participant
   trial_duration: 10000, // Duration of each trial in ms
@@ -244,8 +244,8 @@ const practiceBlock = {
   correct_choice: [jsPsych.timelineVariable('correct_choice')],
   RDK_type: 3, // The type of RDK used
   aperture_type: 1, // Circle
-  aperture_center_x: 960, // window.innerWidth/2,
-  aperture_center_y: 540, // window.innerHeight/2,
+  aperture_center_x: window.innerWidth / 2,
+  aperture_center_y: window.innerHeight / 2,
   aperture_width: 700, // Matches 14deg diameter
   choices: ['a', 'l'], // Choices available to be keyed in by participant
   trial_duration: 20000, // Duration of each trial in ms
