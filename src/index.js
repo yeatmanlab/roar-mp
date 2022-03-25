@@ -20,7 +20,7 @@ import asteroidAttackLevelUp3 from './video/Asteroid_Attack_Level_Up_3.mp4';
 import asteroidAttackLevelUp4 from './video/Asteroid_Attack_Level_Up_4.mp4';
 import asteroidAttackLevelUp5 from './video/Asteroid_Attack_Level_Up_5.mp4';
 import { rootDoc } from './firebaseConfig';
-import { jsPsychPavlovia } from './jsPsychPavlovia';
+import jsPsychPavlovia from './jsPsychPavlovia';
 
 // Set up all experiment related info here
 const jsPsychForURL = initJsPsych();
@@ -83,11 +83,15 @@ const jsPsych = initJsPsych();
 const timeline = [];
 
 /* init connection with pavlovia.org */
-const pavloviaInit = {
-  type: jsPsychPavlovia(jsPsych),
-  command: 'init',
-};
-timeline.push(pavloviaInit);
+const isOnPavlovia = window.location.href.includes('run.pavlovia.org');
+
+if (isOnPavlovia) {
+  const pavloviaInit = {
+    type: jsPsychPavlovia,
+    command: 'init',
+  };
+  timeline.push(pavloviaInit);
+}
 
 const getPid = {
   type: surveyText,
@@ -480,12 +484,14 @@ timeline.push(MotionCohProcedure);
 timeline.push(IBIEnd);
 
 /* finish connection with pavlovia.org */
-const pavloviaFinish = {
-  type: jsPsychPavlovia(jsPsych),
-  command: 'finish',
-  participantId,
-};
-timeline.push(pavloviaFinish);
+if (isOnPavlovia) {
+  const pavloviaFinish = {
+    type: jsPsychPavlovia,
+    command: 'finish',
+    participantId,
+  };
+  timeline.push(pavloviaFinish);
+}
 
 // ---------Run the experiment---------
 jsPsych.run(timeline);
