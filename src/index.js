@@ -12,7 +12,9 @@ import 'regenerator-runtime/runtime';
 import { RoarFirekit } from '@bdelab/roar-firekit';
 
 // import bullsEye from './img/bullsEye.png';
-import asteroidAttackIntro from './video/Asteroid_Attack_Intro.mp4';
+import asteroidAttackIntro1 from './video/Asteroid_Attack_Intro1.mp4';
+import asteroidAttackIntro2 from './video/Asteroid_Attack_Intro2.mp4';
+import asteroidAttackIntro3 from './video/Asteroid_Attack_Intro3.mp4';
 import asteroidAttackEnd from './video/Asteroid_Attack_End.mp4';
 import asteroidAttackLevelUp1 from './video/Asteroid_Attack_Level_Up_1.mp4';
 import asteroidAttackLevelUp2 from './video/Asteroid_Attack_Level_Up_2.mp4';
@@ -154,18 +156,46 @@ const welcome = {
 };
 timeline.push(welcome);
 
-// ---------Create instructions---------
+// ---------Create instructions - interactive---------
 const intro1 = {
   type: videoKeyboardResponse,
   // on_start: setHtmlBgGray,
-  stimulus: [asteroidAttackIntro],
-  choices: [' '],
-  response_allowed_while_playing: false,
-  trial_duration: null,
+  stimulus: [asteroidAttackIntro1],
+  choices: ['a'],
+  response_allowed_while_playing: true,
+  response_ends_trial: false,
+  trial_ends_after_video: true,
   width: 1238,
   height: 800,
 };
 timeline.push(intro1);
+ //interactive training 2
+const intro2 = {
+  type: videoKeyboardResponse,
+  // on_start: setHtmlBgGray,
+  stimulus: [asteroidAttackIntro1],
+  choices: ['l'],
+  response_allowed_while_playing: true,
+  response_ends_trial: false,
+  trial_ends_after_video: true,
+  width: 1238,
+  height: 800,
+};
+timeline.push(intro2);
+
+const intro3 = {
+  type: videoKeyboardResponse,
+  // on_start: setHtmlBgGray,
+  stimulus: [asteroidAttackIntro1],
+  choices: [' '],
+  response_allowed_while_playing: false,
+  response_ends_trial: true,
+  trial_duration: null,
+  trial_ends_after_video: true,
+  width: 1238,
+  height: 800,
+};
+timeline.push(intro3);
 
 // const fixation = {
 //   type: imageKeyboardResponse,
