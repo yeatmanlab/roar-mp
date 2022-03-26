@@ -14,4 +14,4 @@ const firebaseConfig = {
 
 const firebaseApp = initializeApp(firebaseConfig);
 const db = getFirestore(firebaseApp);
-export const rootDoc = doc(db, 'dev', 'richford-20220217');
+export const rootDoc = doc(db, 'prod', 'roar-prod');

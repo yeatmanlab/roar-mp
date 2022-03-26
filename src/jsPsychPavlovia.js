@@ -1,5 +1,3 @@
-import { ParameterType } from 'jspsych';
-
 /* eslint-disable */
 /**
  * jsPsych plugin (version > 7.0) for pavlovia.org
@@ -12,6 +10,8 @@ import { ParameterType } from 'jspsych';
  * @copyright (c) 2017-2020 Ilixa Ltd. (http://ilixa.com) (c) 2020-2021 Open Science Tools Ltd.
  *   (https://opensciencetools.org)
  * @license Distributed under the terms of the MIT License
+ *
+ * With edits by: Adam Richie-Halford <richiehalford@gmail.com>
  */
 
 /**
@@ -22,6 +22,8 @@ import { ParameterType } from 'jspsych';
  *
  * @author Alain Pitiot
  * @see {@link https://pavlovia.org/docs/experiments/create-jsPsych Running jsPsych experiments from Pavlovia}
+ *
+ * With edits by: Adam Richie-Halford <richiehalford@gmail.com>
  */
 class PavloviaPlugin {
   constructor(jsPsych) {
@@ -617,26 +619,26 @@ PavloviaPlugin.info = {
   description: 'communication with pavlovia.org',
   parameters: {
     command: {
-      type: ParameterType.STRING,
+      type: 1,
       pretty_name: 'Command',
       default: 'init',
       description: 'The pavlovia command: "init" (default) or "finish"',
     },
     participantId: {
-      type: ParameterType.STRING,
+      type: 1,
       pretty_name: 'Participant Id',
       default: 'PARTICIPANT',
       description: 'The participant Id: "PARTICIPANT" (default) or any string',
     },
     errorCallback: {
-      type: ParameterType.FUNCTION,
+      type: 4,
       pretty_name: 'ErrorCallback',
       default: PavloviaPlugin.defaultErrorCallback,
       description:
         'The callback function called whenever an error has occurred',
     },
     dataFilter: {
-      type: ParameterType.FUNCTION,
+      type: 4,
       pretty_name: 'DataFilter',
       default: PavloviaPlugin.defaultDataFilter,
       description:

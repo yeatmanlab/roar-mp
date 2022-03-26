@@ -1,0 +1,29 @@
+name: Build and push dist to Pavlovia
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Node '17'
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v2
+      - name: Use Node.js 17
+        uses: actions/setup-node@v2
+        with:
+          node-version: '17'
+          cache: 'npm'
+      - name: Upgrade npm
+        run: npm i -g npm@latest
+      - name: Install and Build 🔧
+        run: |
+          npm ci
+          npm run build
+      - name: Push to Pavlovia 🐕
+        run: |
+          ./.github/scripts/pavlovia-deploy.sh
+        env:
+          GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}

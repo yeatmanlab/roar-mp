@@ -169,11 +169,11 @@ const intro1 = {
   height: 800,
 };
 timeline.push(intro1);
- //interactive training 2
+//interactive training 2
 const intro2 = {
   type: videoKeyboardResponse,
   // on_start: setHtmlBgGray,
-  stimulus: [asteroidAttackIntro1],
+  stimulus: [asteroidAttackIntro2],
   choices: ['l'],
   response_allowed_while_playing: true,
   response_ends_trial: false,
@@ -186,7 +186,7 @@ timeline.push(intro2);
 const intro3 = {
   type: videoKeyboardResponse,
   // on_start: setHtmlBgGray,
-  stimulus: [asteroidAttackIntro1],
+  stimulus: [asteroidAttackIntro3],
   choices: [' '],
   response_allowed_while_playing: false,
   response_ends_trial: true,
@@ -221,8 +221,8 @@ const testBlock = {
   correct_choice: [jsPsych.timelineVariable('correct_choice')],
   RDK_type: 3, // The type of RDK used
   aperture_type: 1, // Circle
-  aperture_center_x: 960, // window.innerWidth/2,
-  aperture_center_y: 540, // window.innerHeight/2,
+  aperture_center_x: window.innerWidth / 2,
+  aperture_center_y: window.innerHeight / 2,
   aperture_width: 700, // Matches 14deg diameter
   choices: ['a', 'l'], // Choices available to be keyed in by participant
   trial_duration: 10000, // Duration of each trial in ms
@@ -240,13 +240,11 @@ const testBlock = {
   on_finish: function (data) {
     // eslint-disable-next-line no-param-reassign, eqeqeq
     data.accuracy = data.correct_choice == data.response;
-    firekit.writeTrial({
-      ...data,
-      grade,
-      condition: jsPsych.timelineVariable('condition'),
-      blockType: 'test',
-      participant: participantId,
-    });
+    data.grade = grade;
+    data.participant = participantId;
+    data.blockType = 'test';
+    data.condition = jsPsych.timelineVariable('condition');
+    firekit.writeTrial(data);
   },
 };
 
@@ -263,8 +261,8 @@ const practiceBlock = {
   correct_choice: [jsPsych.timelineVariable('correct_choice')],
   RDK_type: 3, // The type of RDK used
   aperture_type: 1, // Circle
-  aperture_center_x: 960, // window.innerWidth/2,
-  aperture_center_y: 540, // window.innerHeight/2,
+  aperture_center_x: window.innerWidth / 2,
+  aperture_center_y: window.innerHeight / 2,
   aperture_width: 700, // Matches 14deg diameter
   choices: ['a', 'l'], // Choices available to be keyed in by participant
   trial_duration: 20000, // Duration of each trial in ms
@@ -282,13 +280,11 @@ const practiceBlock = {
   on_finish: function (data) {
     // eslint-disable-next-line no-param-reassign, eqeqeq
     data.accuracy = data.correct_choice == data.response;
-    firekit.writeTrial({
-      ...data,
-      grade,
-      condition: jsPsych.timelineVariable('condition'),
-      blockType: 'practice',
-      participant: participantId,
-    });
+    data.grade = grade;
+    data.participant = participantId;
+    data.blockType = 'practice';
+    data.condition = jsPsych.timelineVariable('condition');
+    firekit.writeTrial(data);
   },
 };
 
