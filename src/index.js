@@ -80,7 +80,11 @@ if (participantId !== undefined) {
   await firekit.startRun();
 }
 
-const jsPsych = initJsPsych();
+const jsPsych = initJsPsych({
+  on_finish: () => {
+    window.location.reload();
+  },
+});
 
 const timeline = [];
 
