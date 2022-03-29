@@ -15,6 +15,8 @@ import { RoarFirekit } from '@bdelab/roar-firekit';
 import asteroidAttackIntro1 from './video/Asteroid_Attack_Intro1.mp4';
 import asteroidAttackIntro2 from './video/Asteroid_Attack_Intro2.mp4';
 import asteroidAttackIntro3 from './video/Asteroid_Attack_Intro3.mp4';
+import asteroidAttackIntro4 from './video/Asteroid_Attack_Intro4.mp4';
+import asteroidAttackIntro5 from './video/Asteroid_Attack_Intro5.mp4';
 import asteroidAttackEnd from './video/Asteroid_Attack_End.mp4';
 import asteroidAttackLevelUp1 from './video/Asteroid_Attack_Level_Up_1.mp4';
 import asteroidAttackLevelUp2 from './video/Asteroid_Attack_Level_Up_2.mp4';
@@ -167,8 +169,7 @@ const intro1 = {
   stimulus: [asteroidAttackIntro1],
   choices: ['a'],
   response_allowed_while_playing: true,
-  response_ends_trial: false,
-  trial_ends_after_video: true,
+  response_ends_trial: true,
   width: 1238,
   height: 800,
 };
@@ -178,9 +179,7 @@ const intro2 = {
   type: videoKeyboardResponse,
   // on_start: setHtmlBgGray,
   stimulus: [asteroidAttackIntro2],
-  choices: ['l'],
-  response_allowed_while_playing: true,
-  response_ends_trial: false,
+  choices: 'NO_KEYS',
   trial_ends_after_video: true,
   width: 1238,
   height: 800,
@@ -191,8 +190,8 @@ const intro3 = {
   type: videoKeyboardResponse,
   // on_start: setHtmlBgGray,
   stimulus: [asteroidAttackIntro3],
-  choices: [' '],
-  response_allowed_while_playing: false,
+  choices: ['l'],
+  response_allowed_while_playing: true,
   response_ends_trial: true,
   trial_duration: null,
   trial_ends_after_video: true,
@@ -200,6 +199,29 @@ const intro3 = {
   height: 800,
 };
 timeline.push(intro3);
+
+const intro4 = {
+  type: videoKeyboardResponse,
+  // on_start: setHtmlBgGray,
+  stimulus: [asteroidAttackIntro4],
+  choices: 'NO_KEYS',
+  trial_ends_after_video: true,
+  width: 1238,
+  height: 800,
+};
+timeline.push(intro4);
+
+const intro5 = {
+  type: videoKeyboardResponse,
+  // on_start: setHtmlBgGray,
+  stimulus: [asteroidAttackIntro3],
+  choices: 'NO_KEYS',
+  trial_duration: null,
+  trial_ends_after_video: true,
+  width: 1238,
+  height: 800,
+};
+timeline.push(intro5);
 
 // const fixation = {
 //   type: imageKeyboardResponse,
@@ -232,8 +254,8 @@ const testBlock = {
   trial_duration: 10000, // Duration of each trial in ms
   fixation_cross: true,
   // not sure if this is the correct scale - do the virtual chin to calibrat
-  fixation_cross_width: 40,
-  fixation_cross_height: 40,
+  fixation_cross_width: 30,
+  fixation_cross_height: 30,
   fixation_cross_thickness: 7,
   dot_color: 'black',
   dot_radius: 3, // 3.4, matching 5 pixels from Elle's paper
@@ -272,8 +294,8 @@ const practiceBlock = {
   trial_duration: 20000, // Duration of each trial in ms
   fixation_cross: true,
   // not sure if this is the correct scale - do the virtual chin to calibrate
-  fixation_cross_width: 40,
-  fixation_cross_height: 40,
+  fixation_cross_width: 30,
+  fixation_cross_height: 30,
   fixation_cross_thickness: 7,
   dot_color: 'black',
   dot_radius: 3, // 3.4, matching 5pixels from Elle's paper
@@ -298,15 +320,15 @@ const practiceTrials = [
     // Condition Practice
     correct_choice: 'l',
     coherent_direction: 0,
-    coherence: 0.96,
-    condition: '96% Right',
+    coherence: 0.80,
+    condition: '80% Right',
   },
   {
     // Condition Practice
     correct_choice: 'a',
     coherent_direction: 180,
-    coherence: 0.96,
-    condition: '96% Left',
+    coherence: 0.80,
+    condition: '80% Left',
   },
 ];
 const practiceInfo = jsPsych.randomization.repeat(practiceTrials, 6);
@@ -426,7 +448,7 @@ const IBI2 = {
   stimulus: [asteroidAttackLevelUp2],
   prompt:
     '<p>Press the Spacebar when you are ready to proceed. Remember to sit at one arm distance from the screen.</p>',
-  choices: [' '],
+  choices: [''],
   response_allowed_while_playing: true,
   trial_duration: null,
   width: 1238,
