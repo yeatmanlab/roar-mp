@@ -449,7 +449,7 @@ const IBI2 = {
   stimulus: [asteroidAttackLevelUp2],
   prompt:
     '<p>Press the Spacebar when you are ready to proceed. Remember to sit at one arm distance from the screen.</p>',
-  choices: [''],
+  choices: [' '],
   response_allowed_while_playing: true,
   trial_duration: null,
   width: 1238,

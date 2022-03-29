@@ -17,7 +17,7 @@ module.exports = {
     filename: '[name].bundle.js',
     path: path.resolve(__dirname, 'dist'),
     clean: {
-      keep: /\.git/,
+      keep: /(\.git|data|LICENSE)/,
     },
   },
   plugins: [
