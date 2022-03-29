@@ -174,6 +174,7 @@ const intro1 = {
   height: 800,
 };
 timeline.push(intro1);
+
 //interactive training 2
 const intro2 = {
   type: videoKeyboardResponse,
@@ -214,7 +215,7 @@ timeline.push(intro4);
 const intro5 = {
   type: videoKeyboardResponse,
   // on_start: setHtmlBgGray,
-  stimulus: [asteroidAttackIntro3],
+  stimulus: [asteroidAttackIntro5],
   choices: 'NO_KEYS',
   trial_duration: null,
   trial_ends_after_video: true,
@@ -320,14 +321,14 @@ const practiceTrials = [
     // Condition Practice
     correct_choice: 'l',
     coherent_direction: 0,
-    coherence: 0.80,
+    coherence: 0.8,
     condition: '80% Right',
   },
   {
     // Condition Practice
     correct_choice: 'a',
     coherent_direction: 180,
-    coherence: 0.80,
+    coherence: 0.8,
     condition: '80% Left',
   },
 ];
