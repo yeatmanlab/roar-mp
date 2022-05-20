@@ -39,7 +39,7 @@ const redirect = (redirectTo) => {
   } else {
     // TODO: Maha, please add the correct redirect url here
     // It should be something like 'https://reading.stanford.edu?g=jfkljdaf&c=1'
-    window.location.href = 'https://reading.stanford.edu?g=foo&c=bar';
+    window.location.href = 'https://reading.stanford.edu/?g=796&c=1';
   }
 };
 
