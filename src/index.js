@@ -29,8 +29,19 @@ import jsPsychPavlovia from './jsPsychPavlovia';
 // Set up all experiment related info here
 const jsPsychForURL = initJsPsych();
 let participantId = jsPsychForURL.data.getURLVariable('participantId');
-let grade;
+let grade = null;
 const schoolId = jsPsychForURL.data.getURLVariable('schoolId');
+const redirectTo = jsPsychForURL.data.getURLVariable('redirectTo') || 'refresh';
+
+const redirect = (redirectTo) => {
+  if (redirectTo === 'refresh') {
+    window.location.reload();
+  } else {
+    // TODO: Maha, please add the correct redirect url here
+    // It should be something like 'https://reading.stanford.edu?g=jfkljdaf&c=1'
+    window.location.href = 'https://reading.stanford.edu?g=foo&c=bar';
+  }
+};
 
 let firekit;
 
@@ -84,7 +95,7 @@ if (participantId !== undefined) {
 
 const jsPsych = initJsPsych({
   on_finish: () => {
-    window.location.reload();
+    redirect(redirectTo);
   },
 });
 
