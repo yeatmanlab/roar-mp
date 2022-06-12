@@ -31,6 +31,7 @@ const jsPsychForURL = initJsPsych();
 let participantId = jsPsychForURL.data.getURLVariable('participant');
 let grade = null;
 const schoolId = jsPsychForURL.data.getURLVariable('schoolId');
+
 const redirectTo = jsPsychForURL.data.getURLVariable('redirectTo') || 'refresh';
 
 const redirect = (redirectTo) => {
@@ -320,6 +321,7 @@ const practiceBlock = {
     data.accuracy = data.correct_choice == data.response;
     data.grade = grade;
     data.participant = participantId;
+    data.schoolId = schoolId;
     data.blockType = 'practice';
     data.condition = jsPsych.timelineVariable('condition');
     firekit.writeTrial(data);
