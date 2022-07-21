@@ -12,17 +12,17 @@ import 'regenerator-runtime/runtime';
 import { RoarFirekit } from '@bdelab/roar-firekit';
 
 // import bullsEye from './img/bullsEye.png';
-import asteroidAttackIntro1 from './video/Asteroid_Attack_Intro1.mp4';
-import asteroidAttackIntro2 from './video/Asteroid_Attack_Intro2.mp4';
-import asteroidAttackIntro3 from './video/Asteroid_Attack_Intro3.mp4';
-import asteroidAttackIntro4 from './video/Asteroid_Attack_Intro4.mp4';
-import asteroidAttackIntro5 from './video/Asteroid_Attack_Intro5.mp4';
-import asteroidAttackEnd from './video/Asteroid_Attack_End.mp4';
-import asteroidAttackLevelUp1 from './video/Asteroid_Attack_Level_Up_1.mp4';
-import asteroidAttackLevelUp2 from './video/Asteroid_Attack_Level_Up_2.mp4';
-import asteroidAttackLevelUp3 from './video/Asteroid_Attack_Level_Up_3.mp4';
-import asteroidAttackLevelUp4 from './video/Asteroid_Attack_Level_Up_4.mp4';
-import asteroidAttackLevelUp5 from './video/Asteroid_Attack_Level_Up_5.mp4';
+import asteroidAttackIntro1 from './video/Honey_Hunt_Intro1.mp4';
+import asteroidAttackIntro2 from './video/Honey_Hunt_Intro2.mp4';
+import asteroidAttackIntro3 from './video/Honey_Hunt_Intro3.mp4';
+import asteroidAttackIntro4 from './video/Honey_Hunt_Intro4.mp4';
+import asteroidAttackIntro5 from './video/Honey_Hunt_Intro5.mp4';
+import asteroidAttackEnd from './video/Honey_Hunt_End.mp4';
+import asteroidAttackLevelUp1 from './video/Honey_Hunt_Level_Up_1.mp4';
+import asteroidAttackLevelUp2 from './video/Honey_Hunt_Level_Up_2.mp4';
+import asteroidAttackLevelUp3 from './video/Honey_Hunt_Level_Up_3.mp4';
+import asteroidAttackLevelUp4 from './video/Honey_Hunt_Level_Up_4.mp4';
+import asteroidAttackLevelUp5 from './video/Honey_Hunt_Level_Up_5.mp4';
 import { rootDoc } from './firebaseConfig';
 import jsPsychPavlovia from './jsPsychPavlovia';
 
