@@ -7,22 +7,23 @@ import htmlKeyboardResponse from '@jspsych/plugin-html-keyboard-response';
 // import imageKeyboardResponse from '@jspsych/plugin-image-keyboard-response';
 import videoKeyboardResponse from '@jspsych/plugin-video-keyboard-response';
 import jsPsychRdk from '@jspsych-contrib/plugin-rdk';
+import jsPsychPreload from '@jspsych/plugin-preload';
 import 'jspsych/css/jspsych.css';
 import 'regenerator-runtime/runtime';
 import { RoarFirekit } from '@bdelab/roar-firekit';
 
 // import bullsEye from './img/bullsEye.png';
-import asteroidAttackIntro1 from './video/Honey_Hunt_Intro1.mp4';
-import asteroidAttackIntro2 from './video/Honey_Hunt_Intro2.mp4';
-import asteroidAttackIntro3 from './video/Honey_Hunt_Intro3.mp4';
-import asteroidAttackIntro4 from './video/Honey_Hunt_Intro4.mp4';
-import asteroidAttackIntro5 from './video/Honey_Hunt_Intro5.mp4';
-import asteroidAttackEnd from './video/Honey_Hunt_End.mp4';
-import asteroidAttackLevelUp1 from './video/Honey_Hunt_Level_Up_1.mp4';
-import asteroidAttackLevelUp2 from './video/Honey_Hunt_Level_Up_2.mp4';
-import asteroidAttackLevelUp3 from './video/Honey_Hunt_Level_Up_3.mp4';
-import asteroidAttackLevelUp4 from './video/Honey_Hunt_Level_Up_4.mp4';
-import asteroidAttackLevelUp5 from './video/Honey_Hunt_Level_Up_5.mp4';
+import introVideo1 from './video/Honey_Hunt_Intro_1.mp4';
+import introVideo2 from './video/Honey_Hunt_Intro_2.mp4';
+import introVideo3 from './video/Honey_Hunt_Intro_3.mp4';
+import introVideo4 from './video/Honey_Hunt_Intro_4.mp4';
+import introVideo5 from './video/Honey_Hunt_Intro_5.mp4';
+import endVideo from './video/Honey_Hunt_End.mp4';
+import levelUpVideo1 from './video/Honey_Hunt_Level_Up_1.mp4';
+import levelUpVideo2 from './video/Honey_Hunt_Level_Up_2.mp4';
+import levelUpVideo3 from './video/Honey_Hunt_Level_Up_3.mp4';
+import levelUpVideo4 from './video/Honey_Hunt_Level_Up_4.mp4';
+import levelUpVideo5 from './video/Honey_Hunt_Level_Up_5.mp4';
 import { rootDoc } from './firebaseConfig';
 import jsPsychPavlovia from './jsPsychPavlovia';
 
@@ -30,7 +31,7 @@ import jsPsychPavlovia from './jsPsychPavlovia';
 const jsPsychForURL = initJsPsych();
 let participantId = jsPsychForURL.data.getURLVariable('participant');
 let grade = null;
-const schoolId = jsPsychForURL.data.getURLVariable('schoolId');
+const schoolId = jsPsychForURL.data.getURLVariable('schoolId') || null;
 
 const redirectTo = jsPsychForURL.data.getURLVariable('redirectTo') || 'refresh';
 
@@ -38,8 +39,6 @@ const redirect = (redirectTo) => {
   if (redirectTo === 'refresh') {
     window.location.reload();
   } else {
-    // TODO: Maha, please add the correct redirect url here
-    // It should be something like 'https://reading.stanford.edu?g=jfkljdaf&c=1'
     window.location.href = 'https://reading.stanford.edu/?g=796&c=1';
   }
 };
@@ -47,8 +46,8 @@ const redirect = (redirectTo) => {
 let firekit;
 
 const taskInfo = {
-  taskId: 'asteroid-attack',
-  taskName: 'Asteroid Attack',
+  taskId: 'honey-hunt',
+  taskName: 'Honey Hunt',
   variantName: 'default',
   taskDescription:
     "In this game participants are on a trip to the moon and galaxy of stars are on their way pushing them to the left or right. To advance, participants are asked to report which way the galaxy of stars moving. They can move towards the left or right and participants need to determine which way the stars are going by pressing 'a' for left and 'l' for right.",
@@ -113,6 +112,24 @@ if (isOnPavlovia) {
   timeline.push(pavloviaInit);
 }
 
+const preload = {
+  type: jsPsychPreload,
+  video: [
+    introVideo1,
+    introVideo2,
+    introVideo3,
+    introVideo4,
+    introVideo5,
+    endVideo,
+    levelUpVideo1,
+    levelUpVideo2,
+    levelUpVideo3,
+    levelUpVideo4,
+    levelUpVideo5,
+  ],
+};
+timeline.push(preload);
+
 const getPid = {
   type: surveyText,
   questions: [
@@ -168,7 +185,8 @@ const setHtmlBgGray = () => {
 const welcome = {
   type: htmlKeyboardResponse,
   on_start: setHtmlBgGray,
-  stimulus: '<p style="font-size:48px; color:green;">Welcome to space! </p>',
+  stimulus:
+    '<p style="font-size:48px; color:green;">Welcome to honey hunt! </p>',
   choices: 'NO_KEYS',
   trial_duration: 500,
 };
@@ -178,10 +196,9 @@ timeline.push(welcome);
 const intro1 = {
   type: videoKeyboardResponse,
   // on_start: setHtmlBgGray,
-  stimulus: [asteroidAttackIntro1],
-  choices: ['a'],
-  response_allowed_while_playing: true,
-  response_ends_trial: true,
+  stimulus: [introVideo1],
+  choices: 'NO_KEYS',
+  trial_ends_after_video: true,
   width: 1238,
   height: 800,
 };
@@ -191,7 +208,7 @@ timeline.push(intro1);
 const intro2 = {
   type: videoKeyboardResponse,
   // on_start: setHtmlBgGray,
-  stimulus: [asteroidAttackIntro2],
+  stimulus: [introVideo2],
   choices: 'NO_KEYS',
   trial_ends_after_video: true,
   width: 1238,
@@ -202,8 +219,8 @@ timeline.push(intro2);
 const intro3 = {
   type: videoKeyboardResponse,
   // on_start: setHtmlBgGray,
-  stimulus: [asteroidAttackIntro3],
-  choices: ['l'],
+  stimulus: [introVideo3],
+  choices: ['a'],
   response_allowed_while_playing: true,
   response_ends_trial: true,
   trial_duration: null,
@@ -216,7 +233,7 @@ timeline.push(intro3);
 const intro4 = {
   type: videoKeyboardResponse,
   // on_start: setHtmlBgGray,
-  stimulus: [asteroidAttackIntro4],
+  stimulus: [introVideo4],
   choices: 'NO_KEYS',
   trial_ends_after_video: true,
   width: 1238,
@@ -227,7 +244,7 @@ timeline.push(intro4);
 const intro5 = {
   type: videoKeyboardResponse,
   // on_start: setHtmlBgGray,
-  stimulus: [asteroidAttackIntro5],
+  stimulus: [introVideo5],
   choices: 'NO_KEYS',
   trial_duration: null,
   trial_ends_after_video: true,
@@ -446,7 +463,7 @@ const feedbackBlock = {
 const IBI1 = {
   type: videoKeyboardResponse,
   // on_start: setHtmlBgGray,
-  stimulus: [asteroidAttackLevelUp1],
+  stimulus: [levelUpVideo1],
   prompt:
     '<p>Press the Spacebar when you are ready to proceed. Remember to sit at one arm distance from the screen.</p>',
   choices: [' '],
@@ -459,7 +476,7 @@ const IBI1 = {
 const IBI2 = {
   type: videoKeyboardResponse,
   // on_start: setHtmlBgGray,
-  stimulus: [asteroidAttackLevelUp2],
+  stimulus: [levelUpVideo2],
   prompt:
     '<p>Press the Spacebar when you are ready to proceed. Remember to sit at one arm distance from the screen.</p>',
   choices: [' '],
@@ -472,7 +489,7 @@ const IBI2 = {
 const IBI3 = {
   type: videoKeyboardResponse,
   // on_start: setHtmlBgGray,
-  stimulus: [asteroidAttackLevelUp3],
+  stimulus: [levelUpVideo3],
   prompt:
     '<p>Press the Spacebar when you are ready to proceed. Remember to sit at one arm distance from the screen.</p>',
   choices: [' '],
@@ -485,7 +502,7 @@ const IBI3 = {
 const IBI4 = {
   type: videoKeyboardResponse,
   on_start: setHtmlBgGray,
-  stimulus: [asteroidAttackLevelUp4],
+  stimulus: [levelUpVideo4],
   prompt:
     '<p>Press the Spacebar when you are ready to proceed. Remember to sit at one arm distance from the screen.</p>',
   choices: [' '],
@@ -497,7 +514,7 @@ const IBI4 = {
 const IBI5 = {
   type: videoKeyboardResponse,
   // on_start: setHtmlBgGray,
-  stimulus: [asteroidAttackLevelUp5],
+  stimulus: [levelUpVideo5],
   prompt:
     '<p>Press the Spacebar when you are ready to proceed. Remember to sit at one arm distance from the screen.</p>',
   choices: [' '],
@@ -510,7 +527,7 @@ const IBI5 = {
 const IBIEnd = {
   type: videoKeyboardResponse,
   // on_start: setHtmlBgGray,
-  stimulus: [asteroidAttackEnd],
+  stimulus: [endVideo],
   response_allowed_while_playing: true,
   choices: [' '],
   trial_duration: null,
