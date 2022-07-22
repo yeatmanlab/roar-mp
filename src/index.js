@@ -252,7 +252,7 @@ const intro5 = {
   response_allowed_while_playing: true,
   response_ends_trial: true,
   trial_duration: null,
-  trial_ends_after_video: true,
+  trial_ends_after_video: false,
   width: 1238,
   height: 800,
 };
