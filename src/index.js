@@ -170,6 +170,19 @@ const ifGetPid = {
   },
 };
 
+window.onerror = function (msg, url, lineNo, columnNo, error) {
+  firekit?.writeTrial({
+    task: 'error',
+    lastTrial: jsPsych.data.getLastTrialData().trials[0],
+    message: String(msg),
+    source: url || null,
+    lineNo: String(lineNo || null),
+    colNo: String(columnNo || null),
+    error: JSON.stringify(error || null),
+  });
+  return false;
+};
+
 timeline.push(ifGetPid);
 
 // store info about the experiment session:
