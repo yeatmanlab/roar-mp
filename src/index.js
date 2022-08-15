@@ -547,6 +547,7 @@ const IBIEnd = {
   // on_start: setHtmlBgGray,
   stimulus: [endVideo],
   response_allowed_while_playing: true,
+  trial_ends_after_video: true,
   choices: [' '],
   trial_duration: null,
   width: 1238,
