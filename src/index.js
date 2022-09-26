@@ -8,6 +8,7 @@ import htmlKeyboardResponse from '@jspsych/plugin-html-keyboard-response';
 import videoKeyboardResponse from '@jspsych/plugin-video-keyboard-response';
 import jsPsychRdk from '@jspsych-contrib/plugin-rdk';
 import jsPsychPreload from '@jspsych/plugin-preload';
+import { pressKey } from '@jspsych/test-utils';
 import 'jspsych/css/jspsych.css';
 import 'regenerator-runtime/runtime';
 import { RoarFirekit } from '@bdelab/roar-firekit';
@@ -26,6 +27,10 @@ import levelUpVideo4 from './video/Honey_Hunt_Level_Up_4.mp4';
 import levelUpVideo5 from './video/Honey_Hunt_Level_Up_5.mp4';
 import { rootDoc } from './firebaseConfig';
 import jsPsychPavlovia from './jsPsychPavlovia';
+
+import treeLeft from './img/tree-left.png';
+import treeRight from './img/tree-right.png';
+import './css/custom.css';
 
 // Set up all experiment related info here
 const jsPsychForURL = initJsPsych();
@@ -279,6 +284,26 @@ timeline.push(intro5);
 // };
 // timeline.push(fixation);
 
+const loadImages = () => {
+  const contentDiv = document.getElementById('jspsych-content');
+
+  const leftImg = document.createElement('img');
+  leftImg.id = 'rdk-image-left';
+  leftImg.src = treeLeft;
+  leftImg.onclick = () => {
+    pressKey('a');
+  };
+  contentDiv.insertAdjacentElement('afterend', leftImg);
+
+  const rightImg = document.createElement('img');
+  rightImg.id = 'rdk-image-right';
+  rightImg.src = treeRight;
+  rightImg.onclick = () => {
+    pressKey('l');
+  };
+  contentDiv.insertAdjacentElement('afterend', rightImg);
+};
+
 // ---------Create trials---------
 // The test block where all the trials are nested. The properties here will
 // trickle down to all trials in the timeline unless they have their own
@@ -311,6 +336,7 @@ const testBlock = {
   // Not sure where this number comes from 200ms is what we want the maximum dot life to be
   dot_life: 12,
   reinsert_type: 1,
+  on_load: loadImages,
   on_finish: function (data) {
     // eslint-disable-next-line no-param-reassign, eqeqeq
     data.accuracy = data.correct_choice == data.response;
@@ -351,6 +377,7 @@ const practiceBlock = {
   // Not sure where dot_life comes from 200ms is what we want the maximum dot life to be
   dot_life: 12,
   reinsert_type: 1,
+  on_load: loadImages,
   on_finish: function (data) {
     // eslint-disable-next-line no-param-reassign, eqeqeq
     data.accuracy = data.correct_choice == data.response;
