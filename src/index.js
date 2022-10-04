@@ -287,21 +287,29 @@ timeline.push(intro5);
 const loadImages = () => {
   const contentDiv = document.getElementById('jspsych-content');
 
-  const leftImg = document.createElement('img');
-  leftImg.id = 'rdk-image-left';
-  leftImg.src = treeLeft;
-  leftImg.onclick = () => {
-    pressKey('a');
-  };
-  contentDiv.insertAdjacentElement('afterend', leftImg);
+  const canvas = contentDiv.firstChild;
+  canvas.width = window.outerWidth;
+  canvas.height = window.outerHeight;
 
-  const rightImg = document.createElement('img');
-  rightImg.id = 'rdk-image-right';
-  rightImg.src = treeRight;
-  rightImg.onclick = () => {
-    pressKey('l');
-  };
-  contentDiv.insertAdjacentElement('afterend', rightImg);
+  if (document.getElementById('rdk-image-left') === null) {
+    const leftImg = document.createElement('img');
+    leftImg.id = 'rdk-image-left';
+    leftImg.src = treeLeft;
+    leftImg.onclick = () => {
+      pressKey('a');
+    };
+    contentDiv.insertAdjacentElement('afterend', leftImg);
+  }
+
+  if (document.getElementById('rdk-image-right') === null) {
+    const rightImg = document.createElement('img');
+    rightImg.id = 'rdk-image-right';
+    rightImg.src = treeRight;
+    rightImg.onclick = () => {
+      pressKey('l');
+    };
+    contentDiv.insertAdjacentElement('afterend', rightImg);
+  }
 };
 
 // ---------Create trials---------
@@ -320,8 +328,8 @@ const testBlock = {
   correct_choice: [jsPsych.timelineVariable('correct_choice')],
   RDK_type: 3, // The type of RDK used
   aperture_type: 1, // Circle
-  aperture_center_x: window.innerWidth / 2,
-  aperture_center_y: window.innerHeight / 2,
+  aperture_center_x: window.outerWidth / 2,
+  aperture_center_y: window.outerHeight / 2 + 30,
   aperture_width: 700, // Matches 14deg diameter
   choices: ['a', 'l'], // Choices available to be keyed in by participant
   trial_duration: 10000, // Duration of each trial in ms
@@ -361,8 +369,8 @@ const practiceBlock = {
   correct_choice: [jsPsych.timelineVariable('correct_choice')],
   RDK_type: 3, // The type of RDK used
   aperture_type: 1, // Circle
-  aperture_center_x: window.innerWidth / 2,
-  aperture_center_y: window.innerHeight / 2,
+  aperture_center_x: window.outerWidth / 2,
+  aperture_center_y: window.outerHeight / 2 + 30,
   aperture_width: 700, // Matches 14deg diameter
   choices: ['a', 'l'], // Choices available to be keyed in by participant
   trial_duration: 20000, // Duration of each trial in ms
