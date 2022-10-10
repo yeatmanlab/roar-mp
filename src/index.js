@@ -57,6 +57,7 @@ const redirect = (redirectTo) => {
 };
 
 const enableButtons = pipeline === 'multitudes' ? true : false;
+let buttonClicked = false;
 
 let firekit;
 
@@ -286,14 +287,6 @@ const intro5 = {
 };
 timeline.push(intro5);
 
-// const fixation = {
-//   type: imageKeyboardResponse,
-//   stimulus: bullsEye,
-//   choices: 'NO_KEYS',
-//   trial_duration: 10000,
-// };
-// timeline.push(fixation);
-
 const loadImages = () => {
   const contentDiv = document.getElementById('jspsych-content');
 
@@ -307,6 +300,7 @@ const loadImages = () => {
     leftImg.src = treeLeft;
     if (enableButtons) {
       leftImg.onclick = () => {
+        buttonClicked = true;
         pressKey('a');
       };
     }
@@ -319,6 +313,7 @@ const loadImages = () => {
     rightImg.src = treeRight;
     if (enableButtons) {
       rightImg.onclick = () => {
+        buttonClicked = true;
         pressKey('l');
       };
     }
@@ -366,7 +361,9 @@ const testBlock = {
     data.participant = participantId;
     data.blockType = 'test';
     data.condition = jsPsych.timelineVariable('condition');
+    data.buttonClicked = buttonClicked;
     firekit.writeTrial(data);
+    buttonClicked = false;
   },
 };
 
@@ -408,7 +405,9 @@ const practiceBlock = {
     data.schoolId = schoolId;
     data.blockType = 'practice';
     data.condition = jsPsych.timelineVariable('condition');
+    data.buttonClicked = buttonClicked;
     firekit.writeTrial(data);
+    buttonClicked = false;
   },
 };
 
