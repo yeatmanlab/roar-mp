@@ -37,16 +37,26 @@ const jsPsychForURL = initJsPsych();
 let participantId = jsPsychForURL.data.getURLVariable('participant');
 let grade = jsPsychForURL.data.getURLVariable('grade') || null;
 const schoolId = jsPsychForURL.data.getURLVariable('schoolId') || null;
-
-const redirectTo = jsPsychForURL.data.getURLVariable('redirectTo') || 'refresh';
+const redirectTo = jsPsychForURL.data.getURLVariable('redirectTo') || null;
+const pipeline = jsPsychForURL.data.getURLVariable('pipeline') || 'rc';
 
 const redirect = (redirectTo) => {
   if (redirectTo === 'refresh') {
     window.location.reload();
   } else {
-    window.location.href = 'https://reading.stanford.edu/?g=796&c=1';
+    if (pipeline === 'multitudes') {
+      window.location.reload();
+    } else if (pipeline === 'rc') {
+      window.location.href = 'https://reading.stanford.edu/?g=796&c=1';
+    } else if (pipeline === 'school') {
+      window.location.href = 'https://reading.stanford.edu/?g=796&c=1';
+    } else if (pipeline === 'ucsfdc') {
+      window.location.href = 'https://reading.stanford.edu/?g=796&c=1';
+    }
   }
 };
+
+const enableButtons = pipeline === 'multitudes' ? true : false;
 
 let firekit;
 
@@ -295,9 +305,11 @@ const loadImages = () => {
     const leftImg = document.createElement('img');
     leftImg.id = 'rdk-image-left';
     leftImg.src = treeLeft;
-    leftImg.onclick = () => {
-      pressKey('a');
-    };
+    if (enableButtons) {
+      leftImg.onclick = () => {
+        pressKey('a');
+      };
+    }
     contentDiv.insertAdjacentElement('afterend', leftImg);
   }
 
@@ -305,9 +317,11 @@ const loadImages = () => {
     const rightImg = document.createElement('img');
     rightImg.id = 'rdk-image-right';
     rightImg.src = treeRight;
-    rightImg.onclick = () => {
-      pressKey('l');
-    };
+    if (enableButtons) {
+      rightImg.onclick = () => {
+        pressKey('l');
+      };
+    }
     contentDiv.insertAdjacentElement('afterend', rightImg);
   }
 };
