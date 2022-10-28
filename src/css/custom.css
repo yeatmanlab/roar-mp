@@ -13,3 +13,33 @@
     top: 50%;
     transform: translateY(-50%);
 }
+
+#rdk-practice-image-left {
+    height: 100%;
+    width: 33%;
+    position: absolute;
+    left: 0;
+    z-index: 999;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+#rdk-practice-image-right {
+    height: 100%;
+    width: 33%;
+    position: absolute;
+    right: 0;
+    z-index: 999;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+#space-bar-tap {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    left: 0;
+    z-index: 999;
+    top: 50%;
+    transform: translateY(-50%);
+}

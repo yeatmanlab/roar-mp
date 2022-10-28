@@ -18,6 +18,8 @@ import introVideo1 from './video/Honey_Hunt_Intro_1.mp4';
 import introVideo2 from './video/Honey_Hunt_Intro_2.mp4';
 import introVideo3 from './video/Honey_Hunt_Intro_3.mp4';
 import introVideo4 from './video/Honey_Hunt_Intro_4.mp4';
+import introButtonVideo3 from './video/Honey_Hunt_Intro_Button_3.mp4';
+import introButtonVideo4 from './video/Honey_Hunt_Intro_Button_4.mp4';
 import introVideo5 from './video/Honey_Hunt_Intro_5.mp4';
 import endVideo from './video/Honey_Hunt_End.mp4';
 import levelUpVideo1 from './video/Honey_Hunt_Level_Up_1.mp4';
@@ -34,9 +36,9 @@ import './css/custom.css';
 
 // Set up all experiment related info here
 const jsPsychForURL = initJsPsych();
-let participantId = jsPsychForURL.data.getURLVariable('participant');
-let grade = jsPsychForURL.data.getURLVariable('grade') || null;
-const schoolId = jsPsychForURL.data.getURLVariable('schoolId') || null;
+let participantId = jsPsychForURL.data.getURLVariable('participant') || null;
+let classId = jsPsychForURL.data.getURLVariable('classId') || null;
+let schoolId = jsPsychForURL.data.getURLVariable('schoolId') || null;
 const redirectTo = jsPsychForURL.data.getURLVariable('redirectTo') || null;
 const pipeline = jsPsychForURL.data.getURLVariable('pipeline') || 'rc';
 
@@ -97,7 +99,7 @@ const taskInfo = {
   ],
 };
 
-if (participantId !== undefined) {
+if (participantId !== null) {
   const minimalUserInfo = { id: participantId, schoolId };
 
   firekit = new RoarFirekit({
@@ -150,21 +152,32 @@ const getPid = {
   type: surveyText,
   questions: [
     {
-      prompt: 'ID:',
-      name: 'participant_info',
+      prompt: 'Participant ID:',
+      name: 'pid',
       placeholder: '0000',
       required: true,
     },
     {
-      prompt: 'Grade:',
-      name: 'Grade',
-      placeholder: 'KG/G1',
+      prompt: 'Class ID:',
+      name: 'ClassId',
+      placeholder: '0000',
+      required: true,
+    },
+    {
+      prompt: 'School ID',
+      name: 'SchoolId',
+      placeholder: '0000',
       required: true,
     },
   ],
   on_finish: (data) => {
-    participantId = data.response.participant_info;
-    grade = data.response.Grade;
+    participantId = [
+      data.response.SchoolId,
+      data.response.ClassId,
+      data.response.pid,
+    ].join('-');
+    classId = data.response.ClassId;
+    schoolId = data.response.SchoolId;
   },
 };
 
@@ -174,7 +187,7 @@ const ifGetPid = {
     return !participantId;
   },
   on_timeline_finish: async () => {
-    const minimalUserInfo = { id: participantId, schoolId, classId: grade };
+    const minimalUserInfo = { id: participantId, schoolId, classId };
 
     firekit = new RoarFirekit({
       rootDoc,
@@ -186,7 +199,11 @@ const ifGetPid = {
   },
 };
 
-window.onerror = function (msg, url, lineNo, columnNo, error) {
+// Add a special error handler that writes javascript errors to a special trial
+// type in the Firestore database
+window.addEventListener('error', (e) => {
+  const { msg, url, lineNo, columnNo, error } = e;
+
   firekit?.writeTrial({
     task: 'error',
     lastTrial: jsPsych.data.getLastTrialData().trials[0],
@@ -195,9 +212,9 @@ window.onerror = function (msg, url, lineNo, columnNo, error) {
     lineNo: String(lineNo || null),
     colNo: String(columnNo || null),
     error: JSON.stringify(error || null),
+    timeStamp: new Date().toISOString(),
   });
-  return false;
-};
+});
 
 timeline.push(ifGetPid);
 
@@ -224,10 +241,10 @@ timeline.push(welcome);
 // ---------Create instructions - interactive---------
 const intro1 = {
   type: videoKeyboardResponse,
-  // on_start: setHtmlBgGray,
   stimulus: [introVideo1],
   choices: 'NO_KEYS',
   trial_ends_after_video: true,
+  trial_duration: 1,
   width: 1238,
   height: 800,
 };
@@ -236,18 +253,19 @@ timeline.push(intro1);
 //interactive training 2
 const intro2 = {
   type: videoKeyboardResponse,
-  // on_start: setHtmlBgGray,
   stimulus: [introVideo2],
   choices: 'NO_KEYS',
   trial_ends_after_video: true,
+  trial_duration: 1,
   width: 1238,
   height: 800,
 };
 timeline.push(intro2);
 
+const keyboard_instructions = [];
+
 const intro3 = {
   type: videoKeyboardResponse,
-  // on_start: setHtmlBgGray,
   stimulus: [introVideo3],
   choices: ['a'],
   response_allowed_while_playing: true,
@@ -257,11 +275,10 @@ const intro3 = {
   width: 1238,
   height: 800,
 };
-timeline.push(intro3);
+keyboard_instructions.push(intro3);
 
 const intro4 = {
   type: videoKeyboardResponse,
-  // on_start: setHtmlBgGray,
   stimulus: [introVideo4],
   choices: ['l'],
   response_allowed_while_playing: true,
@@ -271,17 +288,102 @@ const intro4 = {
   width: 1238,
   height: 800,
 };
-timeline.push(intro4);
+keyboard_instructions.push(intro4);
+
+const ifKeyboardInstrutions = {
+  timeline: keyboard_instructions,
+  conditional_function: () => !enableButtons,
+};
+timeline.push(ifKeyboardInstrutions);
+
+const loadSpaceBarTapDiv = () => {
+  const video = document.getElementById(
+    'jspsych-video-keyboard-response-stimulus'
+  );
+
+  if (document.getElementById('space-bar-tap') === null) {
+    const tapDiv = document.createElement('div');
+    tapDiv.id = 'space-bar-tap';
+    tapDiv.onclick = () => {
+      console.log('Tapping the space bar');
+      buttonClicked = true;
+      pressKey(' ');
+    };
+    video.insertAdjacentElement('afterend', tapDiv);
+  }
+};
+
+const loadPracticeDivs = () => {
+  const video = document.getElementById(
+    'jspsych-video-keyboard-response-stimulus'
+  );
+
+  if (document.getElementById('rdk-practice-image-left') === null) {
+    const leftImg = document.createElement('div');
+    leftImg.id = 'rdk-practice-image-left';
+    leftImg.onclick = () => {
+      buttonClicked = true;
+      pressKey('a');
+    };
+    video.insertAdjacentElement('afterend', leftImg);
+  }
+
+  if (document.getElementById('rdk-practice-image-right') === null) {
+    const rightImg = document.createElement('div');
+    rightImg.id = 'rdk-practice-image-right';
+    rightImg.onclick = () => {
+      buttonClicked = true;
+      pressKey('l');
+    };
+    video.insertAdjacentElement('afterend', rightImg);
+  }
+};
+
+const button_instructions = [];
+
+const introButton3 = {
+  type: videoKeyboardResponse,
+  stimulus: [introButtonVideo3],
+  choices: ['l'],
+  response_allowed_while_playing: true,
+  response_ends_trial: true,
+  trial_duration: null,
+  trial_ends_after_video: true,
+  width: 1238,
+  height: 800,
+  on_load: loadPracticeDivs,
+};
+button_instructions.push(introButton3);
+
+const introButton4 = {
+  type: videoKeyboardResponse,
+  stimulus: [introButtonVideo4],
+  choices: ['a'],
+  response_allowed_while_playing: true,
+  response_ends_trial: true,
+  trial_duration: null,
+  trial_ends_after_video: true,
+  width: 1238,
+  height: 800,
+  on_load: loadPracticeDivs,
+};
+button_instructions.push(introButton4);
+
+const ifButtonInstrutions = {
+  timeline: button_instructions,
+  conditional_function: () => enableButtons,
+};
+timeline.push(ifButtonInstrutions);
 
 const intro5 = {
   type: videoKeyboardResponse,
-  // on_start: setHtmlBgGray,
   stimulus: [introVideo5],
   choices: [' '],
   response_allowed_while_playing: true,
   response_ends_trial: true,
   trial_duration: null,
   trial_ends_after_video: false,
+  on_load: loadSpaceBarTapDiv,
   width: 1238,
   height: 800,
 };
@@ -321,6 +423,17 @@ const loadImages = () => {
   }
 };
 
+const removeImages = () => {
+  const rightImg = document.getElementById('rdk-image-right');
+  const leftImg = document.getElementById('rdk-image-left');
+  if (rightImg !== null) {
+    rightImg.parentNode.removeChild(rightImg);
+  }
+  if (leftImg !== null) {
+    leftImg.parentNode.removeChild(leftImg);
+  }
+};
+
 // ---------Create trials---------
 // The test block where all the trials are nested. The properties here will
 // trickle down to all trials in the timeline unless they have their own
@@ -357,7 +470,8 @@ const testBlock = {
   on_finish: function (data) {
     // eslint-disable-next-line no-param-reassign, eqeqeq
     data.accuracy = data.correct_choice == data.response;
-    data.grade = grade;
+    data.schoolId = schoolId;
+    data.classId = classId;
     data.participant = participantId;
     data.blockType = 'test';
     data.condition = jsPsych.timelineVariable('condition');
@@ -400,9 +514,9 @@ const practiceBlock = {
   on_finish: function (data) {
     // eslint-disable-next-line no-param-reassign, eqeqeq
     data.accuracy = data.correct_choice == data.response;
-    data.grade = grade;
-    data.participant = participantId;
     data.schoolId = schoolId;
+    data.classId = classId;
+    data.participant = participantId;
     data.blockType = 'practice';
     data.condition = jsPsych.timelineVariable('condition');
     data.buttonClicked = buttonClicked;
@@ -528,39 +642,48 @@ const feedbackBlock = {
 // Inter block interval image
 const IBI1 = {
   type: videoKeyboardResponse,
-  // on_start: setHtmlBgGray,
   stimulus: [levelUpVideo1],
   prompt:
     '<p>Press the Spacebar when you are ready to proceed. Remember to sit at one arm distance from the screen.</p>',
   choices: [' '],
   response_allowed_while_playing: true,
   trial_duration: null,
+  on_load: () => {
+    removeImages();
+    loadSpaceBarTapDiv();
+  },
   width: 1238,
   height: 800,
 };
 
 const IBI2 = {
   type: videoKeyboardResponse,
-  // on_start: setHtmlBgGray,
   stimulus: [levelUpVideo2],
   prompt:
     '<p>Press the Spacebar when you are ready to proceed. Remember to sit at one arm distance from the screen.</p>',
   choices: [' '],
   response_allowed_while_playing: true,
   trial_duration: null,
+  on_load: () => {
+    removeImages();
+    loadSpaceBarTapDiv();
+  },
   width: 1238,
   height: 800,
 };
 
 const IBI3 = {
   type: videoKeyboardResponse,
-  // on_start: setHtmlBgGray,
   stimulus: [levelUpVideo3],
   prompt:
     '<p>Press the Spacebar when you are ready to proceed. Remember to sit at one arm distance from the screen.</p>',
   choices: [' '],
   response_allowed_while_playing: true,
   trial_duration: null,
+  on_load: () => {
+    removeImages();
+    loadSpaceBarTapDiv();
+  },
   width: 1238,
   height: 800,
 };
@@ -573,31 +696,41 @@ const IBI4 = {
     '<p>Press the Spacebar when you are ready to proceed. Remember to sit at one arm distance from the screen.</p>',
   choices: [' '],
   response_allowed_while_playing: true,
+  on_load: () => {
+    removeImages();
+    loadSpaceBarTapDiv();
+  },
   width: 1238,
   height: 800,
 };
 
 const IBI5 = {
   type: videoKeyboardResponse,
-  // on_start: setHtmlBgGray,
   stimulus: [levelUpVideo5],
   prompt:
     '<p>Press the Spacebar when you are ready to proceed. Remember to sit at one arm distance from the screen.</p>',
   choices: [' '],
   response_allowed_while_playing: true,
   trial_duration: null,
+  on_load: () => {
+    removeImages();
+    loadSpaceBarTapDiv();
+  },
   width: 1238,
   height: 800,
 };
 
 const IBIEnd = {
   type: videoKeyboardResponse,
-  // on_start: setHtmlBgGray,
   stimulus: [endVideo],
   response_allowed_while_playing: true,
   trial_ends_after_video: true,
   choices: [' '],
   trial_duration: null,
+  on_load: () => {
+    removeImages();
+    loadSpaceBarTapDiv();
+  },
   width: 1238,
   height: 800,
   on_finish: async () => {
