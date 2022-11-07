@@ -13,7 +13,6 @@ import 'jspsych/css/jspsych.css';
 import 'regenerator-runtime/runtime';
 import { RoarFirekit } from '@bdelab/roar-firekit';
 
-// import bullsEye from './img/bullsEye.png';
 import introVideo1 from './video/Honey_Hunt_Intro_1.mp4';
 import introVideo2 from './video/Honey_Hunt_Intro_2.mp4';
 import introVideo3 from './video/Honey_Hunt_Intro_3.mp4';
@@ -27,6 +26,21 @@ import levelUpVideo2 from './video/Honey_Hunt_Level_Up_2.mp4';
 import levelUpVideo3 from './video/Honey_Hunt_Level_Up_3.mp4';
 import levelUpVideo4 from './video/Honey_Hunt_Level_Up_4.mp4';
 import levelUpVideo5 from './video/Honey_Hunt_Level_Up_5.mp4';
+
+import introVideo1Es from './video/Spanish_Honey_Hunt_Intro_1.mp4';
+import introVideo2Es from './video/Spanish_Honey_Hunt_Intro_2.mp4';
+import introVideo3Es from './video/Spanish_Honey_Hunt_Intro_3.mp4';
+import introVideo4Es from './video/Spanish_Honey_Hunt_Intro_4.mp4';
+import introButtonVideo3Es from './video/Spanish_Honey_Hunt_Intro_Button_3.mp4';
+import introButtonVideo4Es from './video/Spanish_Honey_Hunt_Intro_Button_4.mp4';
+import introVideo5Es from './video/Spanish_Honey_Hunt_Intro_5.mp4';
+import endVideoEs from './video/Spanish_Honey_Hunt_End.mp4';
+import levelUpVideo1Es from './video/Spanish_Honey_Hunt_Level_Up_1.mp4';
+import levelUpVideo2Es from './video/Spanish_Honey_Hunt_Level_Up_2.mp4';
+import levelUpVideo3Es from './video/Spanish_Honey_Hunt_Level_Up_3.mp4';
+import levelUpVideo4Es from './video/Spanish_Honey_Hunt_Level_Up_4.mp4';
+import levelUpVideo5Es from './video/Spanish_Honey_Hunt_Level_Up_5.mp4';
+
 import { rootDoc } from './firebaseConfig';
 import jsPsychPavlovia from './jsPsychPavlovia';
 
@@ -41,6 +55,40 @@ let classId = jsPsychForURL.data.getURLVariable('classId') || null;
 let schoolId = jsPsychForURL.data.getURLVariable('schoolId') || null;
 const redirectTo = jsPsychForURL.data.getURLVariable('redirectTo') || null;
 const pipeline = jsPsychForURL.data.getURLVariable('pipeline') || 'rc';
+const language = jsPsychForURL.data.getURLVariable('language') || 'en';
+
+const videos =
+  language === 'es'
+    ? {
+        introVideo1: introVideo1Es,
+        introVideo2: introVideo2Es,
+        introVideo3: introVideo3Es,
+        introVideo4: introVideo4Es,
+        introButtonVideo3: introButtonVideo3Es,
+        introButtonVideo4: introButtonVideo4Es,
+        introVideo5: introVideo5Es,
+        endVideo: endVideoEs,
+        levelUpVideo1: levelUpVideo1Es,
+        levelUpVideo2: levelUpVideo2Es,
+        levelUpVideo3: levelUpVideo3Es,
+        levelUpVideo4: levelUpVideo4Es,
+        levelUpVideo5: levelUpVideo5Es,
+      }
+    : {
+        introVideo1,
+        introVideo2,
+        introVideo3,
+        introVideo4,
+        introButtonVideo3,
+        introButtonVideo4,
+        introVideo5,
+        endVideo,
+        levelUpVideo1,
+        levelUpVideo2,
+        levelUpVideo3,
+        levelUpVideo4,
+        levelUpVideo5,
+      };
 
 const redirect = (redirectTo) => {
   if (redirectTo === 'refresh') {
@@ -66,7 +114,7 @@ let firekit;
 const taskInfo = {
   taskId: 'honey-hunt',
   taskName: 'Honey Hunt',
-  variantName: 'default',
+  variantName: language === 'en' ? 'default' : 'default-es',
   taskDescription:
     "In this game participants are on a trip to the moon and galaxy of stars are on their way pushing them to the left or right. To advance, participants are asked to report which way the galaxy of stars moving. They can move towards the left or right and participants need to determine which way the stars are going by pressing 'a' for left and 'l' for right.",
   variantDescription: 'Default',
@@ -133,17 +181,17 @@ if (isOnPavlovia) {
 const preload = {
   type: jsPsychPreload,
   video: [
-    introVideo1,
-    introVideo2,
-    introVideo3,
-    introVideo4,
-    introVideo5,
-    endVideo,
-    levelUpVideo1,
-    levelUpVideo2,
-    levelUpVideo3,
-    levelUpVideo4,
-    levelUpVideo5,
+    videos.introVideo1,
+    videos.introVideo2,
+    videos.introVideo3,
+    videos.introVideo4,
+    videos.introVideo5,
+    videos.endVideo,
+    videos.levelUpVideo1,
+    videos.levelUpVideo2,
+    videos.levelUpVideo3,
+    videos.levelUpVideo4,
+    videos.levelUpVideo5,
   ],
 };
 timeline.push(preload);
@@ -241,7 +289,7 @@ timeline.push(welcome);
 // ---------Create instructions - interactive---------
 const intro1 = {
   type: videoKeyboardResponse,
-  stimulus: [introVideo1],
+  stimulus: [videos.introVideo1],
   choices: 'NO_KEYS',
   trial_ends_after_video: true,
   trial_duration: null,
@@ -253,7 +301,7 @@ timeline.push(intro1);
 //interactive training 2
 const intro2 = {
   type: videoKeyboardResponse,
-  stimulus: [introVideo2],
+  stimulus: [videos.introVideo2],
   choices: 'NO_KEYS',
   trial_ends_after_video: true,
   trial_duration: null,
@@ -266,7 +314,7 @@ const keyboard_instructions = [];
 
 const intro3 = {
   type: videoKeyboardResponse,
-  stimulus: [introVideo3],
+  stimulus: [videos.introVideo3],
   choices: ['a'],
   response_allowed_while_playing: true,
   response_ends_trial: true,
@@ -279,7 +327,7 @@ keyboard_instructions.push(intro3);
 
 const intro4 = {
   type: videoKeyboardResponse,
-  stimulus: [introVideo4],
+  stimulus: [videos.introVideo4],
   choices: ['l'],
   response_allowed_while_playing: true,
   response_ends_trial: true,
@@ -343,7 +391,7 @@ const button_instructions = [];
 
 const introButton3 = {
   type: videoKeyboardResponse,
-  stimulus: [introButtonVideo3],
+  stimulus: [videos.introButtonVideo3],
   choices: ['l'],
   response_allowed_while_playing: true,
   response_ends_trial: true,
@@ -357,7 +405,7 @@ button_instructions.push(introButton3);
 
 const introButton4 = {
   type: videoKeyboardResponse,
-  stimulus: [introButtonVideo4],
+  stimulus: [videos.introButtonVideo4],
   choices: ['a'],
   response_allowed_while_playing: true,
   response_ends_trial: true,
@@ -377,7 +425,7 @@ timeline.push(ifButtonInstrutions);
 
 const intro5 = {
   type: videoKeyboardResponse,
-  stimulus: [introVideo5],
+  stimulus: [videos.introVideo5],
   choices: [' '],
   response_allowed_while_playing: true,
   response_ends_trial: true,
@@ -642,7 +690,7 @@ const feedbackBlock = {
 // Inter block interval image
 const IBI1 = {
   type: videoKeyboardResponse,
-  stimulus: [levelUpVideo1],
+  stimulus: [videos.levelUpVideo1],
   prompt:
     '<p>Press the Spacebar when you are ready to proceed. Remember to sit at one arm distance from the screen.</p>',
   choices: [' '],
@@ -658,7 +706,7 @@ const IBI1 = {
 
 const IBI2 = {
   type: videoKeyboardResponse,
-  stimulus: [levelUpVideo2],
+  stimulus: [videos.levelUpVideo2],
   prompt:
     '<p>Press the Spacebar when you are ready to proceed. Remember to sit at one arm distance from the screen.</p>',
   choices: [' '],
@@ -674,7 +722,7 @@ const IBI2 = {
 
 const IBI3 = {
   type: videoKeyboardResponse,
-  stimulus: [levelUpVideo3],
+  stimulus: [videos.levelUpVideo3],
   prompt:
     '<p>Press the Spacebar when you are ready to proceed. Remember to sit at one arm distance from the screen.</p>',
   choices: [' '],
@@ -691,7 +739,7 @@ const IBI3 = {
 const IBI4 = {
   type: videoKeyboardResponse,
   on_start: setHtmlBgGray,
-  stimulus: [levelUpVideo4],
+  stimulus: [videos.levelUpVideo4],
   prompt:
     '<p>Press the Spacebar when you are ready to proceed. Remember to sit at one arm distance from the screen.</p>',
   choices: [' '],
@@ -706,7 +754,7 @@ const IBI4 = {
 
 const IBI5 = {
   type: videoKeyboardResponse,
-  stimulus: [levelUpVideo5],
+  stimulus: [videos.levelUpVideo5],
   prompt:
     '<p>Press the Spacebar when you are ready to proceed. Remember to sit at one arm distance from the screen.</p>',
   choices: [' '],
@@ -722,7 +770,7 @@ const IBI5 = {
 
 const IBIEnd = {
   type: videoKeyboardResponse,
-  stimulus: [endVideo],
+  stimulus: [videos.endVideo],
   response_allowed_while_playing: true,
   trial_ends_after_video: true,
   choices: [' '],
