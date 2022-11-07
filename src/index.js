@@ -244,7 +244,7 @@ const intro1 = {
   stimulus: [introVideo1],
   choices: 'NO_KEYS',
   trial_ends_after_video: true,
-  trial_duration: 1,
+  trial_duration: null,
   width: 1238,
   height: 800,
 };
@@ -256,7 +256,7 @@ const intro2 = {
   stimulus: [introVideo2],
   choices: 'NO_KEYS',
   trial_ends_after_video: true,
-  trial_duration: 1,
+  trial_duration: null,
   width: 1238,
   height: 800,
 };
