@@ -482,6 +482,14 @@ const removeImages = () => {
   }
 };
 
+// Multitudes users were having an issue with the fixation cross centering
+// We're still not sure why but for now, we hard-code a correction only for
+// multitudes users.
+let aperture_center_y = window.outerHeight / 2;
+if (pipeline === 'multitudes') {
+  aperture_center_y += 30;
+}
+
 // ---------Create trials---------
 // The test block where all the trials are nested. The properties here will
 // trickle down to all trials in the timeline unless they have their own
@@ -499,7 +507,7 @@ const testBlock = {
   RDK_type: 3, // The type of RDK used
   aperture_type: 1, // Circle
   aperture_center_x: window.outerWidth / 2,
-  aperture_center_y: window.outerHeight / 2 + 30,
+  aperture_center_y: aperture_center_y,
   aperture_width: 700, // Matches 14deg diameter
   choices: ['a', 'l'], // Choices available to be keyed in by participant
   trial_duration: 10000, // Duration of each trial in ms
@@ -543,7 +551,7 @@ const practiceBlock = {
   RDK_type: 3, // The type of RDK used
   aperture_type: 1, // Circle
   aperture_center_x: window.outerWidth / 2,
-  aperture_center_y: window.outerHeight / 2 + 30,
+  aperture_center_y: aperture_center_y,
   aperture_width: 700, // Matches 14deg diameter
   choices: ['a', 'l'], // Choices available to be keyed in by participant
   trial_duration: 20000, // Duration of each trial in ms
