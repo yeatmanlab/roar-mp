@@ -48,6 +48,10 @@ import treeLeft from './img/tree-left.png';
 import treeRight from './img/tree-right.png';
 import './css/custom.css';
 
+// Audio files
+import feedbackCorrect from "./src/audio/feedbackCorrect.mp3";
+import feedbackIncorrect from "./src/audio/feedbackIncorrect.mp3";
+
 // Set up all experiment related info here
 const jsPsychForURL = initJsPsych();
 let participantId = jsPsychForURL.data.getURLVariable('participant') || null;
@@ -687,9 +691,11 @@ const feedbackBlock = {
       .values()[0].accuracy;
 
     if (lastTrialAccuracy) {
-      return '<span style="font-size:40px;color:green;">+3!!</span>';
+      //return '<span style="font-size:40px;color:green;">+3!!</span>';
+      return feedbackCorrect;
     }
-    return '<span style="font-size:40px;color:red;">+1</span>';
+    //return '<span style="font-size:40px;color:red;">+1</span>';
+      return feedbackIncorrect;
   },
   choices: 'NO_KEYS',
   trial_duration: 1000,
