@@ -49,8 +49,8 @@ import treeRight from './img/tree-right.png';
 import './css/custom.css';
 
 // Audio files
-import feedbackCorrect from "./src/audio/feedbackCorrect.mp3";
-import feedbackIncorrect from "./src/audio/feedbackIncorrect.mp3";
+import feedbackCorrect from "./audio/feedbackCorrect.mp3";
+import feedbackIncorrect from "./audio/feedbackIncorrect.mp3";
 
 // Set up all experiment related info here
 const jsPsychForURL = initJsPsych();
@@ -682,6 +682,31 @@ const trials = [
 // Double the number of trials and shuffle them
 const trialInfo = jsPsych.randomization.repeat(trials, 2);
 
+// Copied preloadObj2contentObj from preload.js
+const preloadObj2contentObj = (preloadObj) => {
+  const contentArray = [].concat(...Object.values(preloadObj));
+  return contentArray.reduce((o, val) => {
+    const pathSplit = val.split("/");
+    const fileName = pathSplit[pathSplit.length - 1];
+    const key = fileName.split(".")[0].replace(/Es$/, "");
+    // eslint-disable-next-line no-param-reassign
+    o[camelCase(key)] = val;
+    return o;
+  }, {});
+};
+
+// Copied audioBlocks from preload.js
+const audioBlocks = {
+  3: [
+    feedbackCorrect,
+    feedbackIncorrect,
+  ],
+};
+
+// Automatically populate the audioContent object with the audio files
+// Copied audioContent from preload.js
+export const audioContent = preloadObj2contentObj(audioBlocks);
+
 const feedbackBlock = {
   type: htmlKeyboardResponse,
   on_start: setHtmlBgGray,
@@ -692,10 +717,11 @@ const feedbackBlock = {
 
     if (lastTrialAccuracy) {
       //return '<span style="font-size:40px;color:green;">+3!!</span>';
-      return feedbackCorrect;
+      return audioContent.feedbackCorrect;
+    } else {
+      //return '<span style="font-size:40px;color:red;">+1</span>';
+      return audioContent.feedbackIncorrect;
     }
-    //return '<span style="font-size:40px;color:red;">+1</span>';
-      return feedbackIncorrect;
   },
   choices: 'NO_KEYS',
   trial_duration: 1000,
