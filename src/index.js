@@ -51,6 +51,7 @@ import './css/custom.css';
 // Audio files
 import feedbackCorrect from "./audio/feedbackCorrect.mp3";
 import feedbackIncorrect from "./audio/feedbackIncorrect.mp3";
+import jsPsychAudioKeyboardResponse from "@jspsych/plugin-audio-keyboard-response";
 
 // Set up all experiment related info here
 const jsPsychForURL = initJsPsych();
@@ -682,6 +683,10 @@ const trials = [
 // Double the number of trials and shuffle them
 const trialInfo = jsPsych.randomization.repeat(trials, 2);
 
+// Copied camelCase from preload.js
+export const camelCase = (inString) =>
+  inString.replace(/_([a-z])/g, (g) => g[1].toUpperCase());
+
 // Copied preloadObj2contentObj from preload.js
 const preloadObj2contentObj = (preloadObj) => {
   const contentArray = [].concat(...Object.values(preloadObj));
@@ -708,23 +713,24 @@ const audioBlocks = {
 export const audioContent = preloadObj2contentObj(audioBlocks);
 
 const feedbackBlock = {
-  type: htmlKeyboardResponse,
-  on_start: setHtmlBgGray,
+  type: jsPsychAudioKeyboardResponse,
+  on_start: setHtmlBgGray,    // TODO: check if this is relevant
   stimulus: function () {
     const lastTrialAccuracy = jsPsych.data
       .getLastTrialData()
       .values()[0].accuracy;
 
     if (lastTrialAccuracy) {
-      //return '<span style="font-size:40px;color:green;">+3!!</span>';
       return audioContent.feedbackCorrect;
     } else {
-      //return '<span style="font-size:40px;color:red;">+1</span>';
       return audioContent.feedbackIncorrect;
     }
   },
   choices: 'NO_KEYS',
-  trial_duration: 1000,
+  trial_ends_after_audio: true,
+  data: {
+    task: "feedback",
+  },
 };
 
 // Inter block interval image
