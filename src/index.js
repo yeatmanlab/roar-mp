@@ -4,7 +4,6 @@ import { initJsPsych } from 'jspsych';
 import surveyText from '@jspsych/plugin-survey-text';
 import fullScreen from '@jspsych/plugin-fullscreen';
 import htmlKeyboardResponse from '@jspsych/plugin-html-keyboard-response';
-// import imageKeyboardResponse from '@jspsych/plugin-image-keyboard-response';
 import videoKeyboardResponse from '@jspsych/plugin-video-keyboard-response';
 import jsPsychRdk from '@jspsych-contrib/plugin-rdk';
 import jsPsychPreload from '@jspsych/plugin-preload';
@@ -111,9 +110,9 @@ const redirect = (redirectTo) => {
   }
 };
 
-const enableButtons = pipeline === 'multitudes' ? true : false;
+// TODO: change back to normal
+const enableButtons = true; // pipeline === 'multitudes' ? true : false;
 let buttonClicked = false;
-
 let firekit;
 
 const taskInfo = {
@@ -170,19 +169,6 @@ const jsPsych = initJsPsych({
   },
 });
 
-const timeline = [];
-
-/* init connection with pavlovia.org */
-const isOnPavlovia = window.location.href.includes('run.pavlovia.org');
-
-if (isOnPavlovia) {
-  const pavloviaInit = {
-    type: jsPsychPavlovia,
-    command: 'init',
-  };
-  timeline.push(pavloviaInit);
-}
-
 const preload = {
   type: jsPsychPreload,
   video: [
@@ -199,7 +185,14 @@ const preload = {
     videos.levelUpVideo5,
   ],
 };
-timeline.push(preload);
+
+const preloadAudio = {
+  type: jsPsychPreload,
+  audio: [
+    feedbackCorrect,
+    feedbackIncorrect
+  ]
+};
 
 const getPid = {
   type: surveyText,
@@ -269,14 +262,7 @@ window.addEventListener('error', (e) => {
   });
 });
 
-timeline.push(ifGetPid);
-
-// store info about the experiment session:
-timeline.push({
-  type: fullScreen,
-  fullscreen_mode: true,
-});
-
+// TODO: move this to CSS
 const setHtmlBgGray = () => {
   document.body.style.backgroundColor = 'gray';
 };
@@ -289,7 +275,6 @@ const welcome = {
   choices: 'NO_KEYS',
   trial_duration: 500,
 };
-timeline.push(welcome);
 
 // ---------Create instructions - interactive---------
 const intro1 = {
@@ -301,7 +286,6 @@ const intro1 = {
   width: 1238,
   height: 800,
 };
-timeline.push(intro1);
 
 //interactive training 2
 const intro2 = {
@@ -313,7 +297,6 @@ const intro2 = {
   width: 1238,
   height: 800,
 };
-timeline.push(intro2);
 
 const keyboard_instructions = [];
 
@@ -347,7 +330,6 @@ const ifKeyboardInstrutions = {
   timeline: keyboard_instructions,
   conditional_function: () => !enableButtons,
 };
-timeline.push(ifKeyboardInstrutions);
 
 const loadSpaceBarTapDiv = () => {
   const video = document.getElementById(
@@ -358,6 +340,7 @@ const loadSpaceBarTapDiv = () => {
     const tapDiv = document.createElement('div');
     tapDiv.id = 'space-bar-tap';
     tapDiv.onclick = () => {
+      // TODO: remove the console.log statements
       console.log('Tapping the space bar');
       buttonClicked = true;
       pressKey(' ');
@@ -426,7 +409,6 @@ const ifButtonInstrutions = {
   timeline: button_instructions,
   conditional_function: () => enableButtons,
 };
-timeline.push(ifButtonInstrutions);
 
 const intro5 = {
   type: videoKeyboardResponse,
@@ -440,7 +422,6 @@ const intro5 = {
   width: 1238,
   height: 800,
 };
-timeline.push(intro5);
 
 const loadImages = () => {
   const contentDiv = document.getElementById('jspsych-content');
@@ -450,29 +431,37 @@ const loadImages = () => {
   canvas.height = window.outerHeight;
 
   if (document.getElementById('rdk-image-left') === null) {
+    const leftDiv = document.createElement('div');
     const leftImg = document.createElement('img');
+    leftDiv.appendChild(leftImg);
+    leftDiv.id = 'rdk-div-left';
     leftImg.id = 'rdk-image-left';
     leftImg.src = treeLeft;
     if (enableButtons) {
-      leftImg.onclick = () => {
+      leftDiv.onclick = () => {
         buttonClicked = true;
         pressKey('a');
+        console.log("Click detected on the left side.");
       };
     }
-    contentDiv.insertAdjacentElement('afterend', leftImg);
+    contentDiv.insertAdjacentElement('afterend', leftDiv);
   }
 
   if (document.getElementById('rdk-image-right') === null) {
+    const rightDiv = document.createElement('div');
     const rightImg = document.createElement('img');
+    rightDiv.appendChild(rightImg);
+    rightDiv.id = 'rdk-div-right';
     rightImg.id = 'rdk-image-right';
     rightImg.src = treeRight;
     if (enableButtons) {
-      rightImg.onclick = () => {
+      rightDiv.onclick = () => {
         buttonClicked = true;
         pressKey('l');
+        console.log("Click detected on the right side.");
       };
     }
-    contentDiv.insertAdjacentElement('afterend', rightImg);
+    contentDiv.insertAdjacentElement('afterend', rightDiv);
   }
 };
 
@@ -515,9 +504,9 @@ const testBlock = {
   aperture_center_y: aperture_center_y,
   aperture_width: 700, // Matches 14deg diameter
   choices: ['a', 'l'], // Choices available to be keyed in by participant
-  trial_duration: 10000, // Duration of each trial in ms
+  trial_duration: 6000, // Duration of each trial in ms
   fixation_cross: true,
-  // not sure if this is the correct scale - do the virtual chin to calibrat
+  // not sure if this is the correct scale - do the virtual chin to calibrate
   fixation_cross_width: 30,
   fixation_cross_height: 30,
   fixation_cross_thickness: 7,
@@ -542,6 +531,7 @@ const testBlock = {
   },
 };
 
+// TODO: create an RDK config containing common, practice, and test
 // create practice block
 const practiceBlock = {
   type: jsPsychRdk,
@@ -559,7 +549,7 @@ const practiceBlock = {
   aperture_center_y: aperture_center_y,
   aperture_width: 700, // Matches 14deg diameter
   choices: ['a', 'l'], // Choices available to be keyed in by participant
-  trial_duration: 20000, // Duration of each trial in ms
+  trial_duration: 15000, // Duration of each trial in ms
   fixation_cross: true,
   // not sure if this is the correct scale - do the virtual chin to calibrate
   fixation_cross_width: 30,
@@ -678,9 +668,13 @@ const trials = [
   },
 ];
 
-// Multiply based on how many trials you need and randomize the trial order
-// 6*8=48 trials a block in total 240 trials
-// Double the number of trials and shuffle them
+/*
+ * Multiply based on how many trials you need and randomize the trial order
+ * For the trials array, 10 conditions x 2 repeats = 20 generated trials
+ * 5 coherence levels (or 5 blocks) x 20 trials = 100 trials
+ * Therefore, the entire experiment has 100 trials
+ * Double the number of trials and shuffle them
+ */
 const trialInfo = jsPsych.randomization.repeat(trials, 2);
 
 // Copied camelCase from preload.js
@@ -846,6 +840,37 @@ const MotionCohProcedure = {
   randomize_order: true,
   repetition: 1,
 };
+
+const timeline = [];
+
+/* init connection with pavlovia.org */
+const isOnPavlovia = window.location.href.includes('run.pavlovia.org');
+
+if (isOnPavlovia) {
+  const pavloviaInit = {
+    type: jsPsychPavlovia,
+    command: 'init',
+  };
+  timeline.push(pavloviaInit);
+}
+
+timeline.push(preload);
+timeline.push(preloadAudio);
+timeline.push(ifGetPid);
+
+// store info about the experiment session:
+timeline.push({
+  type: fullScreen,
+  fullscreen_mode: true,
+});
+
+timeline.push(welcome);
+// TODO: enable these intro videos
+// timeline.push(intro1);
+// timeline.push(intro2);
+timeline.push(ifKeyboardInstrutions);
+timeline.push(ifButtonInstrutions);
+// timeline.push(intro5);
 
 timeline.push(PracticeProcedure);
 timeline.push(IBI1);
