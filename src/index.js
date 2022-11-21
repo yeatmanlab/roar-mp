@@ -48,6 +48,11 @@ import treeLeft from './img/tree-left.png';
 import treeRight from './img/tree-right.png';
 import './css/custom.css';
 
+// Audio files
+import feedbackCorrect from "./audio/feedbackCorrect.mp3";
+import feedbackIncorrect from "./audio/feedbackIncorrect.mp3";
+import jsPsychAudioKeyboardResponse from "@jspsych/plugin-audio-keyboard-response";
+
 // Set up all experiment related info here
 const jsPsychForURL = initJsPsych();
 let participantId = jsPsychForURL.data.getURLVariable('participant') || null;
@@ -678,21 +683,54 @@ const trials = [
 // Double the number of trials and shuffle them
 const trialInfo = jsPsych.randomization.repeat(trials, 2);
 
+// Copied camelCase from preload.js
+export const camelCase = (inString) =>
+  inString.replace(/_([a-z])/g, (g) => g[1].toUpperCase());
+
+// Copied preloadObj2contentObj from preload.js
+const preloadObj2contentObj = (preloadObj) => {
+  const contentArray = [].concat(...Object.values(preloadObj));
+  return contentArray.reduce((o, val) => {
+    const pathSplit = val.split("/");
+    const fileName = pathSplit[pathSplit.length - 1];
+    const key = fileName.split(".")[0].replace(/Es$/, "");
+    // eslint-disable-next-line no-param-reassign
+    o[camelCase(key)] = val;
+    return o;
+  }, {});
+};
+
+// Copied audioBlocks from preload.js
+const audioBlocks = {
+  3: [
+    feedbackCorrect,
+    feedbackIncorrect,
+  ],
+};
+
+// Automatically populate the audioContent object with the audio files
+// Copied audioContent from preload.js
+export const audioContent = preloadObj2contentObj(audioBlocks);
+
 const feedbackBlock = {
-  type: htmlKeyboardResponse,
-  on_start: setHtmlBgGray,
+  type: jsPsychAudioKeyboardResponse,
+  on_start: setHtmlBgGray,    // TODO: check if this is relevant
   stimulus: function () {
     const lastTrialAccuracy = jsPsych.data
       .getLastTrialData()
       .values()[0].accuracy;
 
     if (lastTrialAccuracy) {
-      return '<span style="font-size:40px;color:green;">+3!!</span>';
+      return audioContent.feedbackCorrect;
+    } else {
+      return audioContent.feedbackIncorrect;
     }
-    return '<span style="font-size:40px;color:red;">+1</span>';
   },
   choices: 'NO_KEYS',
-  trial_duration: 1000,
+  trial_ends_after_audio: true,
+  data: {
+    task: "feedback",
+  },
 };
 
 // Inter block interval image
