@@ -485,14 +485,24 @@ if (pipeline === 'multitudes') {
 }
 
 // ---------Create trials---------
-// The test block where all the trials are nested. The properties here will
-// trickle down to all trials in the timeline unless they have their own
-// properties defined
-const testBlock = {
+function rdkWriteTrial(data) {
+  // eslint-disable-next-line no-param-reassign, eqeqeq
+  data.accuracy = data.correct_choice == data.response;
+  data.schoolId = schoolId;
+  data.classId = classId;
+  data.participant = participantId;
+  data.condition = jsPsych.timelineVariable('condition');
+  data.buttonClicked = buttonClicked;
+  firekit.writeTrial(data);
+  buttonClicked = false;
+}
+
+const rdkConfig = {
   type: jsPsychRdk,
-  // The Inter Trial Interval. You can either have no ITI, or change the display
-  // element to be the same color as the stimuli background to prevent flashing
-  // between trials
+  /*
+   * The Inter Trial Interval. You can either have no ITI, or change the display element
+   * to be the same color as the stimuli background to prevent flashing between trials.
+   */
   timing_post_trial: 1000,
   number_of_dots: 150, // Total number of dots in the aperture
   coherent_direction: jsPsych.timelineVariable('coherent_direction'),
@@ -504,7 +514,6 @@ const testBlock = {
   aperture_center_y: aperture_center_y,
   aperture_width: 700, // Matches 14deg diameter
   choices: ['a', 'l'], // Choices available to be keyed in by participant
-  trial_duration: 6000, // Duration of each trial in ms
   fixation_cross: true,
   // not sure if this is the correct scale - do the virtual chin to calibrate
   fixation_cross_width: 30,
@@ -513,66 +522,31 @@ const testBlock = {
   dot_color: 'black',
   dot_radius: 3, // 3.4, matching 5 pixels from Elle's paper
   move_distance: 6, // Speed parameter 6 seems the calculated speed but visually is not appealing
-  // Not sure where this number comes from 200ms is what we want the maximum dot life to be
+  // Not sure where `dot_life` comes from 200ms is what we want the maximum dot life to be
   dot_life: 12,
   reinsert_type: 1,
   on_load: loadImages,
-  on_finish: function (data) {
-    // eslint-disable-next-line no-param-reassign, eqeqeq
-    data.accuracy = data.correct_choice == data.response;
-    data.schoolId = schoolId;
-    data.classId = classId;
-    data.participant = participantId;
+};
+
+// The test block where all the trials are nested. The properties here will
+// trickle down to all trials in the timeline unless they have their own
+// properties defined
+const testBlock = {
+  ...rdkConfig,
+  trial_duration: 6000, // Duration of each trial in ms
+  on_finish: (data) => {
     data.blockType = 'test';
-    data.condition = jsPsych.timelineVariable('condition');
-    data.buttonClicked = buttonClicked;
-    firekit.writeTrial(data);
-    buttonClicked = false;
+    rdkWriteTrial(data);
   },
 };
 
-// TODO: create an RDK config containing common, practice, and test
 // create practice block
 const practiceBlock = {
-  type: jsPsychRdk,
-  // The Inter Trial Interval. You can either have no ITI, or change the display
-  // element to be the same color as the stimuli background to prevent flashing
-  // between trials
-  timing_post_trial: 1000,
-  number_of_dots: 150, // Total number of dots in the aperture
-  coherent_direction: jsPsych.timelineVariable('coherent_direction'),
-  coherence: jsPsych.timelineVariable('coherence'),
-  correct_choice: [jsPsych.timelineVariable('correct_choice')],
-  RDK_type: 3, // The type of RDK used
-  aperture_type: 1, // Circle
-  aperture_center_x: window.outerWidth / 2,
-  aperture_center_y: aperture_center_y,
-  aperture_width: 700, // Matches 14deg diameter
-  choices: ['a', 'l'], // Choices available to be keyed in by participant
+  ...rdkConfig,
   trial_duration: 15000, // Duration of each trial in ms
-  fixation_cross: true,
-  // not sure if this is the correct scale - do the virtual chin to calibrate
-  fixation_cross_width: 30,
-  fixation_cross_height: 30,
-  fixation_cross_thickness: 7,
-  dot_color: 'black',
-  dot_radius: 3, // 3.4, matching 5pixels from Elle's paper
-  move_distance: 6, // Speed parameter 6 seems the calculated speed but visually is not appealing
-  // Not sure where dot_life comes from 200ms is what we want the maximum dot life to be
-  dot_life: 12,
-  reinsert_type: 1,
-  on_load: loadImages,
-  on_finish: function (data) {
-    // eslint-disable-next-line no-param-reassign, eqeqeq
-    data.accuracy = data.correct_choice == data.response;
-    data.schoolId = schoolId;
-    data.classId = classId;
-    data.participant = participantId;
+  on_finish: (data) => {
     data.blockType = 'practice';
-    data.condition = jsPsych.timelineVariable('condition');
-    data.buttonClicked = buttonClicked;
-    firekit.writeTrial(data);
-    buttonClicked = false;
+    rdkWriteTrial(data);
   },
 };
 
