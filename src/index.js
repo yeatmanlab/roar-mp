@@ -110,8 +110,7 @@ const redirect = (redirectTo) => {
   }
 };
 
-// TODO: change back to normal
-const enableButtons = true; // pipeline === 'multitudes' ? true : false;
+const enableButtons = pipeline === 'multitudes' ? true : false;
 let buttonClicked = false;
 let firekit;
 
@@ -262,14 +261,9 @@ window.addEventListener('error', (e) => {
   });
 });
 
-// TODO: move this to CSS
-const setHtmlBgGray = () => {
-  document.body.style.backgroundColor = 'gray';
-};
-
 const welcome = {
   type: htmlKeyboardResponse,
-  on_start: setHtmlBgGray,
+  on_start: () => document.body.style.backgroundColor = 'gray',
   stimulus:
     '<p style="font-size:48px; color:green;">Welcome to honey hunt! </p>',
   choices: 'NO_KEYS',
@@ -340,8 +334,6 @@ const loadSpaceBarTapDiv = () => {
     const tapDiv = document.createElement('div');
     tapDiv.id = 'space-bar-tap';
     tapDiv.onclick = () => {
-      // TODO: remove the console.log statements
-      console.log('Tapping the space bar');
       buttonClicked = true;
       pressKey(' ');
     };
@@ -441,7 +433,6 @@ const loadImages = () => {
       leftDiv.onclick = () => {
         buttonClicked = true;
         pressKey('a');
-        console.log("Click detected on the left side.");
       };
     }
     contentDiv.insertAdjacentElement('afterend', leftDiv);
@@ -458,7 +449,6 @@ const loadImages = () => {
       rightDiv.onclick = () => {
         buttonClicked = true;
         pressKey('l');
-        console.log("Click detected on the right side.");
       };
     }
     contentDiv.insertAdjacentElement('afterend', rightDiv);
@@ -682,7 +672,6 @@ export const audioContent = preloadObj2contentObj(audioBlocks);
 
 const feedbackBlock = {
   type: jsPsychAudioKeyboardResponse,
-  on_start: setHtmlBgGray,    // TODO: check if this is relevant
   stimulus: function () {
     const lastTrialAccuracy = jsPsych.data
       .getLastTrialData()
@@ -752,7 +741,6 @@ const IBI3 = {
 
 const IBI4 = {
   type: videoKeyboardResponse,
-  on_start: setHtmlBgGray,
   stimulus: [videos.levelUpVideo4],
   prompt:
     '<p>Press the Spacebar when you are ready to proceed. Remember to sit at one arm distance from the screen.</p>',
@@ -839,12 +827,11 @@ timeline.push({
 });
 
 timeline.push(welcome);
-// TODO: enable these intro videos
-// timeline.push(intro1);
-// timeline.push(intro2);
+timeline.push(intro1);
+timeline.push(intro2);
 timeline.push(ifKeyboardInstrutions);
 timeline.push(ifButtonInstrutions);
-// timeline.push(intro5);
+timeline.push(intro5);
 
 timeline.push(PracticeProcedure);
 timeline.push(IBI1);
