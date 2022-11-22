@@ -48,6 +48,11 @@ import treeLeft from './img/tree-left.png';
 import treeRight from './img/tree-right.png';
 import './css/custom.css';
 
+// Audio files
+import feedbackCorrect from "./audio/feedbackCorrect.mp3";
+import feedbackIncorrect from "./audio/feedbackIncorrect.mp3";
+import jsPsychAudioKeyboardResponse from "@jspsych/plugin-audio-keyboard-response";
+
 // Set up all experiment related info here
 const jsPsychForURL = initJsPsych();
 let participantId = jsPsychForURL.data.getURLVariable('participant') || null;
@@ -673,26 +678,54 @@ const trials = [
   },
 ];
 
-// Multiply based on how many trials you need and randomize the trial order
-// 6*8=48 trials a block in total 240 trials
-// Double the number of trials and shuffle them
-const trialInfo = jsPsych.randomization.repeat(trials, 2);
+// Copied camelCase from preload.js
+export const camelCase = (inString) =>
+  inString.replace(/_([a-z])/g, (g) => g[1].toUpperCase());
+
+// Copied preloadObj2contentObj from preload.js
+const preloadObj2contentObj = (preloadObj) => {
+  const contentArray = [].concat(...Object.values(preloadObj));
+  return contentArray.reduce((o, val) => {
+    const pathSplit = val.split("/");
+    const fileName = pathSplit[pathSplit.length - 1];
+    const key = fileName.split(".")[0].replace(/Es$/, "");
+    // eslint-disable-next-line no-param-reassign
+    o[camelCase(key)] = val;
+    return o;
+  }, {});
+};
+
+// Copied audioBlocks from preload.js
+const audioBlocks = {
+  3: [
+    feedbackCorrect,
+    feedbackIncorrect,
+  ],
+};
+
+// Automatically populate the audioContent object with the audio files
+// Copied audioContent from preload.js
+export const audioContent = preloadObj2contentObj(audioBlocks);
 
 const feedbackBlock = {
-  type: htmlKeyboardResponse,
-  on_start: setHtmlBgGray,
+  type: jsPsychAudioKeyboardResponse,
+  on_start: setHtmlBgGray,    // TODO: check if this is relevant
   stimulus: function () {
     const lastTrialAccuracy = jsPsych.data
       .getLastTrialData()
       .values()[0].accuracy;
 
     if (lastTrialAccuracy) {
-      return '<span style="font-size:40px;color:green;">+3!!</span>';
+      return audioContent.feedbackCorrect;
+    } else {
+      return audioContent.feedbackIncorrect;
     }
-    return '<span style="font-size:40px;color:red;">+1</span>';
   },
   choices: 'NO_KEYS',
-  trial_duration: 1000,
+  trial_ends_after_audio: true,
+  data: {
+    task: "feedback",
+  },
 };
 
 // Inter block interval image
@@ -801,25 +834,35 @@ const PracticeProcedure = {
   randomize_order: true,
   repetition: 1,
 };
-
-const MotionCohProcedure = {
-  timeline: [testBlock, feedbackBlock],
-  timeline_variables: trialInfo,
-  randomize_order: true,
-  repetition: 1,
-};
+// Multiply based on how many trials you need and randomize the trial order
+// 6*8=48 trials a block in total 240 trials
+// Double the number of trials and shuffle them
+const createMotionCohProcedure = (conditionToOmit) => {
+  const repeats = (new Array(trials.length)).fill(2);
+  if (conditionToOmit !== null) {
+    repeats[conditionToOmit * 2] = 0
+    repeats[conditionToOmit * 2 + 1] = 0
+  }
+  const trialInfo = jsPsych.randomization.repeat(trials, repeats);
+  return {
+    timeline: [testBlock, feedbackBlock],
+    timeline_variables: trialInfo,
+    randomize_order: true,
+    repetition: 1,
+  };
+}
 
 timeline.push(PracticeProcedure);
 timeline.push(IBI1);
-timeline.push(MotionCohProcedure);
+timeline.push(createMotionCohProcedure(0));
 timeline.push(IBI2);
-timeline.push(MotionCohProcedure);
+timeline.push(createMotionCohProcedure(1));
 timeline.push(IBI3);
-timeline.push(MotionCohProcedure);
+timeline.push(createMotionCohProcedure(2));
 timeline.push(IBI4);
-timeline.push(MotionCohProcedure);
+timeline.push(createMotionCohProcedure(3));
 timeline.push(IBI5);
-timeline.push(MotionCohProcedure);
+timeline.push(createMotionCohProcedure(4));
 timeline.push(IBIEnd);
 
 /* finish connection with pavlovia.org */
