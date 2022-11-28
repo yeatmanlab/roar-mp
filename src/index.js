@@ -56,6 +56,8 @@ let schoolId = jsPsychForURL.data.getURLVariable('schoolId') || null;
 const redirectTo = jsPsychForURL.data.getURLVariable('redirectTo') || null;
 const pipeline = jsPsychForURL.data.getURLVariable('pipeline') || 'rc';
 const language = jsPsychForURL.data.getURLVariable('language') || 'en';
+const responseModality =
+  jsPsychForURL.data.getURLVariable('responseModality') || 'touch';
 
 const videos =
   language === 'es'
@@ -106,7 +108,7 @@ const redirect = (redirectTo) => {
   }
 };
 
-const enableButtons = pipeline === 'multitudes' ? true : false;
+const enableButtons = responseModality === 'touch' ? true : false;
 let buttonClicked = false;
 
 let firekit;
