@@ -4,7 +4,6 @@ import { initJsPsych } from 'jspsych';
 import surveyText from '@jspsych/plugin-survey-text';
 import fullScreen from '@jspsych/plugin-fullscreen';
 import htmlKeyboardResponse from '@jspsych/plugin-html-keyboard-response';
-// import imageKeyboardResponse from '@jspsych/plugin-image-keyboard-response';
 import videoKeyboardResponse from '@jspsych/plugin-video-keyboard-response';
 import jsPsychRdk from '@jspsych-contrib/plugin-rdk';
 import jsPsychPreload from '@jspsych/plugin-preload';
@@ -61,6 +60,8 @@ let schoolId = jsPsychForURL.data.getURLVariable('schoolId') || null;
 const redirectTo = jsPsychForURL.data.getURLVariable('redirectTo') || null;
 const pipeline = jsPsychForURL.data.getURLVariable('pipeline') || 'rc';
 const language = jsPsychForURL.data.getURLVariable('language') || 'en';
+const responseModality =
+  jsPsychForURL.data.getURLVariable('responseModality') || 'touch';
 
 const videos =
   language === 'es'
@@ -111,9 +112,8 @@ const redirect = (redirectTo) => {
   }
 };
 
-const enableButtons = pipeline === 'multitudes' ? true : false;
+const enableButtons = responseModality === 'touch' ? true : false;
 let buttonClicked = false;
-
 let firekit;
 
 const taskInfo = {
@@ -170,19 +170,6 @@ const jsPsych = initJsPsych({
   },
 });
 
-const timeline = [];
-
-/* init connection with pavlovia.org */
-const isOnPavlovia = window.location.href.includes('run.pavlovia.org');
-
-if (isOnPavlovia) {
-  const pavloviaInit = {
-    type: jsPsychPavlovia,
-    command: 'init',
-  };
-  timeline.push(pavloviaInit);
-}
-
 const preload = {
   type: jsPsychPreload,
   video: [
@@ -199,7 +186,14 @@ const preload = {
     videos.levelUpVideo5,
   ],
 };
-timeline.push(preload);
+
+const preloadAudio = {
+  type: jsPsychPreload,
+  audio: [
+    feedbackCorrect,
+    feedbackIncorrect
+  ]
+};
 
 const getPid = {
   type: surveyText,
@@ -269,27 +263,14 @@ window.addEventListener('error', (e) => {
   });
 });
 
-timeline.push(ifGetPid);
-
-// store info about the experiment session:
-timeline.push({
-  type: fullScreen,
-  fullscreen_mode: true,
-});
-
-const setHtmlBgGray = () => {
-  document.body.style.backgroundColor = 'gray';
-};
-
 const welcome = {
   type: htmlKeyboardResponse,
-  on_start: setHtmlBgGray,
+  on_start: () => document.body.style.backgroundColor = 'gray',
   stimulus:
     '<p style="font-size:48px; color:green;">Welcome to honey hunt! </p>',
   choices: 'NO_KEYS',
   trial_duration: 500,
 };
-timeline.push(welcome);
 
 // ---------Create instructions - interactive---------
 const intro1 = {
@@ -301,7 +282,6 @@ const intro1 = {
   width: 1238,
   height: 800,
 };
-timeline.push(intro1);
 
 //interactive training 2
 const intro2 = {
@@ -313,7 +293,6 @@ const intro2 = {
   width: 1238,
   height: 800,
 };
-timeline.push(intro2);
 
 const keyboard_instructions = [];
 
@@ -347,7 +326,6 @@ const ifKeyboardInstrutions = {
   timeline: keyboard_instructions,
   conditional_function: () => !enableButtons,
 };
-timeline.push(ifKeyboardInstrutions);
 
 const loadSpaceBarTapDiv = () => {
   const video = document.getElementById(
@@ -358,7 +336,6 @@ const loadSpaceBarTapDiv = () => {
     const tapDiv = document.createElement('div');
     tapDiv.id = 'space-bar-tap';
     tapDiv.onclick = () => {
-      console.log('Tapping the space bar');
       buttonClicked = true;
       pressKey(' ');
     };
@@ -426,7 +403,6 @@ const ifButtonInstrutions = {
   timeline: button_instructions,
   conditional_function: () => enableButtons,
 };
-timeline.push(ifButtonInstrutions);
 
 const intro5 = {
   type: videoKeyboardResponse,
@@ -440,7 +416,6 @@ const intro5 = {
   width: 1238,
   height: 800,
 };
-timeline.push(intro5);
 
 const loadImages = () => {
   const contentDiv = document.getElementById('jspsych-content');
@@ -450,29 +425,35 @@ const loadImages = () => {
   canvas.height = window.outerHeight;
 
   if (document.getElementById('rdk-image-left') === null) {
+    const leftDiv = document.createElement('div');
     const leftImg = document.createElement('img');
+    leftDiv.appendChild(leftImg);
+    leftDiv.id = 'rdk-div-left';
     leftImg.id = 'rdk-image-left';
     leftImg.src = treeLeft;
     if (enableButtons) {
-      leftImg.onclick = () => {
+      leftDiv.onclick = () => {
         buttonClicked = true;
         pressKey('a');
       };
     }
-    contentDiv.insertAdjacentElement('afterend', leftImg);
+    contentDiv.insertAdjacentElement('afterend', leftDiv);
   }
 
   if (document.getElementById('rdk-image-right') === null) {
+    const rightDiv = document.createElement('div');
     const rightImg = document.createElement('img');
+    rightDiv.appendChild(rightImg);
+    rightDiv.id = 'rdk-div-right';
     rightImg.id = 'rdk-image-right';
     rightImg.src = treeRight;
     if (enableButtons) {
-      rightImg.onclick = () => {
+      rightDiv.onclick = () => {
         buttonClicked = true;
         pressKey('l');
       };
     }
-    contentDiv.insertAdjacentElement('afterend', rightImg);
+    contentDiv.insertAdjacentElement('afterend', rightDiv);
   }
 };
 
@@ -496,58 +477,24 @@ if (pipeline === 'multitudes') {
 }
 
 // ---------Create trials---------
-// The test block where all the trials are nested. The properties here will
-// trickle down to all trials in the timeline unless they have their own
-// properties defined
-const testBlock = {
-  type: jsPsychRdk,
-  // The Inter Trial Interval. You can either have no ITI, or change the display
-  // element to be the same color as the stimuli background to prevent flashing
-  // between trials
-  timing_post_trial: 1000,
-  number_of_dots: 150, // Total number of dots in the aperture
-  coherent_direction: jsPsych.timelineVariable('coherent_direction'),
-  coherence: jsPsych.timelineVariable('coherence'),
-  correct_choice: [jsPsych.timelineVariable('correct_choice')],
-  RDK_type: 3, // The type of RDK used
-  aperture_type: 1, // Circle
-  aperture_center_x: window.outerWidth / 2,
-  aperture_center_y: aperture_center_y,
-  aperture_width: 700, // Matches 14deg diameter
-  choices: ['a', 'l'], // Choices available to be keyed in by participant
-  trial_duration: 10000, // Duration of each trial in ms
-  fixation_cross: true,
-  // not sure if this is the correct scale - do the virtual chin to calibrat
-  fixation_cross_width: 30,
-  fixation_cross_height: 30,
-  fixation_cross_thickness: 7,
-  dot_color: 'black',
-  dot_radius: 3, // 3.4, matching 5 pixels from Elle's paper
-  move_distance: 6, // Speed parameter 6 seems the calculated speed but visually is not appealing
-  // Not sure where this number comes from 200ms is what we want the maximum dot life to be
-  dot_life: 12,
-  reinsert_type: 1,
-  on_load: loadImages,
-  on_finish: function (data) {
-    // eslint-disable-next-line no-param-reassign, eqeqeq
-    data.accuracy = data.correct_choice == data.response;
-    data.schoolId = schoolId;
-    data.classId = classId;
-    data.participant = participantId;
-    data.blockType = 'test';
-    data.condition = jsPsych.timelineVariable('condition');
-    data.buttonClicked = buttonClicked;
-    firekit.writeTrial(data);
-    buttonClicked = false;
-  },
-};
+function rdkWriteTrial(data) {
+  // eslint-disable-next-line no-param-reassign, eqeqeq
+  data.accuracy = data.correct_choice == data.response;
+  data.schoolId = schoolId;
+  data.classId = classId;
+  data.participant = participantId;
+  data.condition = jsPsych.timelineVariable('condition');
+  data.buttonClicked = buttonClicked;
+  firekit.writeTrial(data);
+  buttonClicked = false;
+}
 
-// create practice block
-const practiceBlock = {
+const rdkConfig = {
   type: jsPsychRdk,
-  // The Inter Trial Interval. You can either have no ITI, or change the display
-  // element to be the same color as the stimuli background to prevent flashing
-  // between trials
+  /*
+   * The Inter Trial Interval. You can either have no ITI, or change the display element
+   * to be the same color as the stimuli background to prevent flashing between trials.
+   */
   timing_post_trial: 1000,
   number_of_dots: 150, // Total number of dots in the aperture
   coherent_direction: jsPsych.timelineVariable('coherent_direction'),
@@ -559,30 +506,39 @@ const practiceBlock = {
   aperture_center_y: aperture_center_y,
   aperture_width: 700, // Matches 14deg diameter
   choices: ['a', 'l'], // Choices available to be keyed in by participant
-  trial_duration: 20000, // Duration of each trial in ms
   fixation_cross: true,
   // not sure if this is the correct scale - do the virtual chin to calibrate
   fixation_cross_width: 30,
   fixation_cross_height: 30,
   fixation_cross_thickness: 7,
   dot_color: 'black',
-  dot_radius: 3, // 3.4, matching 5pixels from Elle's paper
+  dot_radius: 3, // 3.4, matching 5 pixels from Elle's paper
   move_distance: 6, // Speed parameter 6 seems the calculated speed but visually is not appealing
-  // Not sure where dot_life comes from 200ms is what we want the maximum dot life to be
+  // Not sure where `dot_life` comes from 200ms is what we want the maximum dot life to be
   dot_life: 12,
   reinsert_type: 1,
   on_load: loadImages,
-  on_finish: function (data) {
-    // eslint-disable-next-line no-param-reassign, eqeqeq
-    data.accuracy = data.correct_choice == data.response;
-    data.schoolId = schoolId;
-    data.classId = classId;
-    data.participant = participantId;
+};
+
+// The test block where all the trials are nested. The properties here will
+// trickle down to all trials in the timeline unless they have their own
+// properties defined
+const testBlock = {
+  ...rdkConfig,
+  trial_duration: 6000, // Duration of each trial in ms
+  on_finish: (data) => {
+    data.blockType = 'test';
+    rdkWriteTrial(data);
+  },
+};
+
+// create practice block
+const practiceBlock = {
+  ...rdkConfig,
+  trial_duration: 15000, // Duration of each trial in ms
+  on_finish: (data) => {
     data.blockType = 'practice';
-    data.condition = jsPsych.timelineVariable('condition');
-    data.buttonClicked = buttonClicked;
-    firekit.writeTrial(data);
-    buttonClicked = false;
+    rdkWriteTrial(data);
   },
 };
 
@@ -707,9 +663,37 @@ const audioBlocks = {
 // Copied audioContent from preload.js
 export const audioContent = preloadObj2contentObj(audioBlocks);
 
+// Copied camelCase from preload.js
+export const camelCase = (inString) =>
+  inString.replace(/_([a-z])/g, (g) => g[1].toUpperCase());
+
+// Copied preloadObj2contentObj from preload.js
+const preloadObj2contentObj = (preloadObj) => {
+  const contentArray = [].concat(...Object.values(preloadObj));
+  return contentArray.reduce((o, val) => {
+    const pathSplit = val.split("/");
+    const fileName = pathSplit[pathSplit.length - 1];
+    const key = fileName.split(".")[0].replace(/Es$/, "");
+    // eslint-disable-next-line no-param-reassign
+    o[camelCase(key)] = val;
+    return o;
+  }, {});
+};
+
+// Copied audioBlocks from preload.js
+const audioBlocks = {
+  3: [
+    feedbackCorrect,
+    feedbackIncorrect,
+  ],
+};
+
+// Automatically populate the audioContent object with the audio files
+// Copied audioContent from preload.js
+export const audioContent = preloadObj2contentObj(audioBlocks);
+
 const feedbackBlock = {
   type: jsPsychAudioKeyboardResponse,
-  on_start: setHtmlBgGray,    // TODO: check if this is relevant
   stimulus: function () {
     const lastTrialAccuracy = jsPsych.data
       .getLastTrialData()
@@ -779,7 +763,6 @@ const IBI3 = {
 
 const IBI4 = {
   type: videoKeyboardResponse,
-  on_start: setHtmlBgGray,
   stimulus: [videos.levelUpVideo4],
   prompt:
     '<p>Press the Spacebar when you are ready to proceed. Remember to sit at one arm distance from the screen.</p>',
@@ -834,9 +817,8 @@ const PracticeProcedure = {
   randomize_order: true,
   repetition: 1,
 };
+
 // Multiply based on how many trials you need and randomize the trial order
-// 6*8=48 trials a block in total 240 trials
-// Double the number of trials and shuffle them
 const createMotionCohProcedure = (conditionToOmit) => {
   const repeats = (new Array(trials.length)).fill(2);
   if (conditionToOmit !== null) {
@@ -851,6 +833,36 @@ const createMotionCohProcedure = (conditionToOmit) => {
     repetition: 1,
   };
 }
+
+const timeline = [];
+
+/* init connection with pavlovia.org */
+const isOnPavlovia = window.location.href.includes('run.pavlovia.org');
+
+if (isOnPavlovia) {
+  const pavloviaInit = {
+    type: jsPsychPavlovia,
+    command: 'init',
+  };
+  timeline.push(pavloviaInit);
+}
+
+timeline.push(preload);
+timeline.push(preloadAudio);
+timeline.push(ifGetPid);
+
+// store info about the experiment session:
+timeline.push({
+  type: fullScreen,
+  fullscreen_mode: true,
+});
+
+timeline.push(welcome);
+timeline.push(intro1);
+timeline.push(intro2);
+timeline.push(ifKeyboardInstrutions);
+timeline.push(ifButtonInstrutions);
+timeline.push(intro5);
 
 timeline.push(PracticeProcedure);
 timeline.push(IBI1);
