@@ -634,14 +634,34 @@ const trials = [
   },
 ];
 
-/*
- * Multiply based on how many trials you need and randomize the trial order
- * For the trials array, 10 conditions x 2 repeats = 20 generated trials
- * 5 coherence levels (or 5 blocks) x 20 trials = 100 trials
- * Therefore, the entire experiment has 100 trials
- * Double the number of trials and shuffle them
- */
-const trialInfo = jsPsych.randomization.repeat(trials, 2);
+// Copied camelCase from preload.js
+export const camelCase = (inString) =>
+  inString.replace(/_([a-z])/g, (g) => g[1].toUpperCase());
+
+// Copied preloadObj2contentObj from preload.js
+const preloadObj2contentObj = (preloadObj) => {
+  const contentArray = [].concat(...Object.values(preloadObj));
+  return contentArray.reduce((o, val) => {
+    const pathSplit = val.split("/");
+    const fileName = pathSplit[pathSplit.length - 1];
+    const key = fileName.split(".")[0].replace(/Es$/, "");
+    // eslint-disable-next-line no-param-reassign
+    o[camelCase(key)] = val;
+    return o;
+  }, {});
+};
+
+// Copied audioBlocks from preload.js
+const audioBlocks = {
+  3: [
+    feedbackCorrect,
+    feedbackIncorrect,
+  ],
+};
+
+// Automatically populate the audioContent object with the audio files
+// Copied audioContent from preload.js
+export const audioContent = preloadObj2contentObj(audioBlocks);
 
 // Copied camelCase from preload.js
 export const camelCase = (inString) =>
@@ -798,12 +818,21 @@ const PracticeProcedure = {
   repetition: 1,
 };
 
-const MotionCohProcedure = {
-  timeline: [testBlock, feedbackBlock],
-  timeline_variables: trialInfo,
-  randomize_order: true,
-  repetition: 1,
-};
+// Multiply based on how many trials you need and randomize the trial order
+const createMotionCohProcedure = (conditionToOmit) => {
+  const repeats = (new Array(trials.length)).fill(2);
+  if (conditionToOmit !== null) {
+    repeats[conditionToOmit * 2] = 0
+    repeats[conditionToOmit * 2 + 1] = 0
+  }
+  const trialInfo = jsPsych.randomization.repeat(trials, repeats);
+  return {
+    timeline: [testBlock, feedbackBlock],
+    timeline_variables: trialInfo,
+    randomize_order: true,
+    repetition: 1,
+  };
+}
 
 const timeline = [];
 
@@ -837,15 +866,15 @@ timeline.push(intro5);
 
 timeline.push(PracticeProcedure);
 timeline.push(IBI1);
-timeline.push(MotionCohProcedure);
+timeline.push(createMotionCohProcedure(0));
 timeline.push(IBI2);
-timeline.push(MotionCohProcedure);
+timeline.push(createMotionCohProcedure(1));
 timeline.push(IBI3);
-timeline.push(MotionCohProcedure);
+timeline.push(createMotionCohProcedure(2));
 timeline.push(IBI4);
-timeline.push(MotionCohProcedure);
+timeline.push(createMotionCohProcedure(3));
 timeline.push(IBI5);
-timeline.push(MotionCohProcedure);
+timeline.push(createMotionCohProcedure(4));
 timeline.push(IBIEnd);
 
 /* finish connection with pavlovia.org */
