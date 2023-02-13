@@ -48,9 +48,9 @@ import treeRight from './img/tree-right.png';
 import './css/custom.css';
 
 // Audio files
-import feedbackCorrect from "./audio/feedbackCorrect.mp3";
-import feedbackIncorrect from "./audio/feedbackIncorrect.mp3";
-import jsPsychAudioKeyboardResponse from "@jspsych/plugin-audio-keyboard-response";
+import feedbackCorrect from './audio/feedbackCorrect.mp3';
+import feedbackIncorrect from './audio/feedbackIncorrect.mp3';
+import jsPsychAudioKeyboardResponse from '@jspsych/plugin-audio-keyboard-response';
 
 // Set up all experiment related info here
 const jsPsychForURL = initJsPsych();
@@ -189,10 +189,7 @@ const preload = {
 
 const preloadAudio = {
   type: jsPsychPreload,
-  audio: [
-    feedbackCorrect,
-    feedbackIncorrect
-  ]
+  audio: [feedbackCorrect, feedbackIncorrect],
 };
 
 const getPid = {
@@ -265,7 +262,7 @@ window.addEventListener('error', (e) => {
 
 const welcome = {
   type: htmlKeyboardResponse,
-  on_start: () => document.body.style.backgroundColor = 'gray',
+  on_start: () => (document.body.style.backgroundColor = 'gray'),
   stimulus:
     '<p style="font-size:48px; color:green;">Welcome to honey hunt! </p>',
   choices: 'NO_KEYS',
@@ -642,9 +639,9 @@ export const camelCase = (inString) =>
 const preloadObj2contentObj = (preloadObj) => {
   const contentArray = [].concat(...Object.values(preloadObj));
   return contentArray.reduce((o, val) => {
-    const pathSplit = val.split("/");
+    const pathSplit = val.split('/');
     const fileName = pathSplit[pathSplit.length - 1];
-    const key = fileName.split(".")[0].replace(/Es$/, "");
+    const key = fileName.split('.')[0].replace(/Es$/, '');
     // eslint-disable-next-line no-param-reassign
     o[camelCase(key)] = val;
     return o;
@@ -653,39 +650,7 @@ const preloadObj2contentObj = (preloadObj) => {
 
 // Copied audioBlocks from preload.js
 const audioBlocks = {
-  3: [
-    feedbackCorrect,
-    feedbackIncorrect,
-  ],
-};
-
-// Automatically populate the audioContent object with the audio files
-// Copied audioContent from preload.js
-export const audioContent = preloadObj2contentObj(audioBlocks);
-
-// Copied camelCase from preload.js
-export const camelCase = (inString) =>
-  inString.replace(/_([a-z])/g, (g) => g[1].toUpperCase());
-
-// Copied preloadObj2contentObj from preload.js
-const preloadObj2contentObj = (preloadObj) => {
-  const contentArray = [].concat(...Object.values(preloadObj));
-  return contentArray.reduce((o, val) => {
-    const pathSplit = val.split("/");
-    const fileName = pathSplit[pathSplit.length - 1];
-    const key = fileName.split(".")[0].replace(/Es$/, "");
-    // eslint-disable-next-line no-param-reassign
-    o[camelCase(key)] = val;
-    return o;
-  }, {});
-};
-
-// Copied audioBlocks from preload.js
-const audioBlocks = {
-  3: [
-    feedbackCorrect,
-    feedbackIncorrect,
-  ],
+  3: [feedbackCorrect, feedbackIncorrect],
 };
 
 // Automatically populate the audioContent object with the audio files
@@ -708,7 +673,7 @@ const feedbackBlock = {
   choices: 'NO_KEYS',
   trial_ends_after_audio: true,
   data: {
-    task: "feedback",
+    task: 'feedback',
   },
 };
 
@@ -820,10 +785,10 @@ const PracticeProcedure = {
 
 // Multiply based on how many trials you need and randomize the trial order
 const createMotionCohProcedure = (conditionToOmit) => {
-  const repeats = (new Array(trials.length)).fill(2);
+  const repeats = new Array(trials.length).fill(2);
   if (conditionToOmit !== null) {
-    repeats[conditionToOmit * 2] = 0
-    repeats[conditionToOmit * 2 + 1] = 0
+    repeats[conditionToOmit * 2] = 0;
+    repeats[conditionToOmit * 2 + 1] = 0;
   }
   const trialInfo = jsPsych.randomization.repeat(trials, repeats);
   return {
@@ -832,7 +797,7 @@ const createMotionCohProcedure = (conditionToOmit) => {
     randomize_order: true,
     repetition: 1,
   };
-}
+};
 
 const timeline = [];
 
