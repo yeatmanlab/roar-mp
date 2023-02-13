@@ -116,6 +116,12 @@ const enableButtons = responseModality === 'touch' ? true : false;
 let buttonClicked = false;
 let firekit;
 
+console.log(responseModality);
+console.log(enableButtons);
+console.log((() => !enableButtons)());
+console.log((() => enableButtons)());
+console.log(pipeline);
+
 const taskInfo = {
   taskId: 'honey-hunt',
   taskName: 'Honey Hunt',
@@ -468,9 +474,11 @@ const removeImages = () => {
 // Multitudes users were having an issue with the fixation cross centering
 // We're still not sure why but for now, we hard-code a correction only for
 // multitudes users.
+let aperture_center_x = window.outerWidth / 2;
 let aperture_center_y = window.outerHeight / 2;
 if (pipeline === 'multitudes') {
-  aperture_center_y += 30;
+  aperture_center_x = 1920 / 2;
+  aperture_center_y = 1080 / 2;
 }
 
 // ---------Create trials---------
@@ -499,7 +507,7 @@ const rdkConfig = {
   correct_choice: [jsPsych.timelineVariable('correct_choice')],
   RDK_type: 3, // The type of RDK used
   aperture_type: 1, // Circle
-  aperture_center_x: window.outerWidth / 2,
+  aperture_center_x: aperture_center_x,
   aperture_center_y: aperture_center_y,
   aperture_width: 700, // Matches 14deg diameter
   choices: ['a', 'l'], // Choices available to be keyed in by participant
