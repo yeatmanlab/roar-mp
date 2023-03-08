@@ -60,6 +60,7 @@ let schoolId = jsPsychForURL.data.getURLVariable('schoolId') || null;
 const redirectTo = jsPsychForURL.data.getURLVariable('redirectTo') || null;
 const pipeline = jsPsychForURL.data.getURLVariable('pipeline') || 'rc';
 const language = jsPsychForURL.data.getURLVariable('language') || 'en';
+const studyId = jsPsychForURL.data.getURLVariable('studyId') || null;
 const responseModality =
   jsPsychForURL.data.getURLVariable('responseModality') || 'touch';
 
@@ -159,7 +160,7 @@ const taskInfo = {
 };
 
 if (participantId !== null) {
-  const minimalUserInfo = { id: participantId, schoolId };
+  const minimalUserInfo = { id: participantId, schoolId, studyId };
 
   firekit = new RoarFirekit({
     rootDoc,
@@ -237,7 +238,7 @@ const ifGetPid = {
     return !participantId;
   },
   on_timeline_finish: async () => {
-    const minimalUserInfo = { id: participantId, schoolId, classId };
+    const minimalUserInfo = { id: participantId, schoolId, classId, studyId };
 
     firekit = new RoarFirekit({
       rootDoc,
