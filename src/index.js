@@ -50,7 +50,6 @@ import './css/custom.css';
 // Audio files
 import feedbackCorrect from './audio/feedbackCorrect.mp3';
 import feedbackIncorrect from './audio/feedbackIncorrect.mp3';
-import jsPsychAudioKeyboardResponse from '@jspsych/plugin-audio-keyboard-response';
 
 // Set up all experiment related info here
 const jsPsychForURL = initJsPsych();
@@ -117,11 +116,11 @@ const enableButtons = responseModality === 'touch' ? true : false;
 let buttonClicked = false;
 let firekit;
 
-console.log(responseModality);
-console.log(enableButtons);
-console.log((() => !enableButtons)());
-console.log((() => enableButtons)());
-console.log(pipeline);
+// console.log(responseModality);
+// console.log(enableButtons);
+// console.log((() => !enableButtons)());
+// console.log((() => enableButtons)());
+// console.log(pipeline);
 
 const taskInfo = {
   taskId: 'honey-hunt',
@@ -285,6 +284,7 @@ const intro1 = {
   trial_duration: null,
   width: 1238,
   height: 800,
+
 };
 
 //interactive training 2
@@ -493,6 +493,8 @@ function rdkWriteTrial(data) {
   data.buttonClicked = buttonClicked;
   firekit.writeTrial(data);
   buttonClicked = false;
+
+  playFeedbackAudio(data.accuracy)
 }
 
 const rdkConfig = {
@@ -666,25 +668,17 @@ const audioBlocks = {
 // Copied audioContent from preload.js
 export const audioContent = preloadObj2contentObj(audioBlocks);
 
-const feedbackBlock = {
-  type: jsPsychAudioKeyboardResponse,
-  stimulus: function () {
-    const lastTrialAccuracy = jsPsych.data
-      .getLastTrialData()
-      .values()[0].accuracy;
+const playFeedbackAudio = (responseIsCorrect) => {
+  if (responseIsCorrect) {
+    console.log('correctAudio: ', audioContent.feedbackCorrect)
+    console.log('correctAudio type: ', typeof audioContent.feedbackCorrect)
 
-    if (lastTrialAccuracy) {
-      return audioContent.feedbackCorrect;
-    } else {
-      return audioContent.feedbackIncorrect;
-    }
-  },
-  choices: 'NO_KEYS',
-  trial_ends_after_audio: true,
-  data: {
-    task: 'feedback',
-  },
-};
+    new Audio(audioContent.feedbackCorrect).play()
+  } else {
+    new Audio(audioContent.feedbackIncorrect).play()
+  }
+}
+
 
 // Inter block interval image
 const IBI1 = {
@@ -786,7 +780,7 @@ const IBIEnd = {
 
 // ---------Prepare the main timeline---------
 const PracticeProcedure = {
-  timeline: [practiceBlock, feedbackBlock],
+  timeline: [practiceBlock],
   timeline_variables: practiceInfo,
   randomize_order: true,
   repetition: 1,
@@ -801,7 +795,7 @@ const createMotionCohProcedure = (conditionToOmit) => {
   }
   const trialInfo = jsPsych.randomization.repeat(trials, repeats);
   return {
-    timeline: [testBlock, feedbackBlock],
+    timeline: [testBlock],
     timeline_variables: trialInfo,
     randomize_order: true,
     repetition: 1,
@@ -829,6 +823,7 @@ timeline.push(ifGetPid);
 timeline.push({
   type: fullScreen,
   fullscreen_mode: true,
+  delay_after: 0
 });
 
 timeline.push(welcome);
