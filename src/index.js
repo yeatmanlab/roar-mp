@@ -670,9 +670,6 @@ export const audioContent = preloadObj2contentObj(audioBlocks);
 
 const playFeedbackAudio = (responseIsCorrect) => {
   if (responseIsCorrect) {
-    console.log('correctAudio: ', audioContent.feedbackCorrect)
-    console.log('correctAudio type: ', typeof audioContent.feedbackCorrect)
-
     new Audio(audioContent.feedbackCorrect).play()
   } else {
     new Audio(audioContent.feedbackIncorrect).play()
