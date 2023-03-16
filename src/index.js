@@ -491,6 +491,10 @@ function rdkWriteTrial(data) {
   data.participant = participantId;
   data.condition = jsPsych.timelineVariable('condition');
   data.buttonClicked = buttonClicked;
+  data.pipeline = pipeline;
+  data.language = language;
+  data.studyId = studyId;
+  data.responseModality = responseModality;
   firekit.writeTrial(data);
   buttonClicked = false;
 }
