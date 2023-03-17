@@ -820,7 +820,7 @@ timeline.push(ifGetPid);
 timeline.push({
   type: fullScreen,
   fullscreen_mode: true,
-  delay_after: 0
+  delay_after: 450
 });
 
 timeline.push(welcome);
