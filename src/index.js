@@ -1,13 +1,9 @@
 /* eslint-disable func-names */
+// npm run serve:dev
 /* eslint-disable object-shorthand */
 import { initJsPsych } from 'jspsych';
 import surveyText from '@jspsych/plugin-survey-text';
-import fullScreen from '@jspsych/plugin-fullscreen';
-import htmlKeyboardResponse from '@jspsych/plugin-html-keyboard-response';
-import videoKeyboardResponse from '@jspsych/plugin-video-keyboard-response';
-import jsPsychRdk from '@jspsych-contrib/plugin-rdk';
 import jsPsychPreload from '@jspsych/plugin-preload';
-import { pressKey } from '@jspsych/test-utils';
 import 'jspsych/css/jspsych.css';
 import 'regenerator-runtime/runtime';
 import { RoarFirekit } from '@bdelab/roar-firekit';
@@ -122,6 +118,7 @@ console.log(enableButtons);
 console.log((() => !enableButtons)());
 console.log((() => enableButtons)());
 console.log(pipeline);
+
 
 const taskInfo = {
   taskId: 'honey-hunt',
@@ -267,382 +264,8 @@ window.addEventListener('error', (e) => {
   });
 });
 
-const welcome = {
-  type: htmlKeyboardResponse,
-  on_start: () => (document.body.style.backgroundColor = 'gray'),
-  stimulus:
-    '<p style="font-size:48px; color:green;">Welcome to honey hunt! </p>',
-  choices: 'NO_KEYS',
-  trial_duration: 500,
-};
-
-// ---------Create instructions - interactive---------
-const intro1 = {
-  type: videoKeyboardResponse,
-  stimulus: [videos.introVideo1],
-  choices: 'NO_KEYS',
-  trial_ends_after_video: true,
-  trial_duration: null,
-  width: 1238,
-  height: 800,
-};
-
-//interactive training 2
-const intro2 = {
-  type: videoKeyboardResponse,
-  stimulus: [videos.introVideo2],
-  choices: 'NO_KEYS',
-  trial_ends_after_video: true,
-  trial_duration: null,
-  width: 1238,
-  height: 800,
-};
-
-const keyboard_instructions = [];
-
-const intro3 = {
-  type: videoKeyboardResponse,
-  stimulus: [videos.introVideo3],
-  choices: ['a'],
-  response_allowed_while_playing: true,
-  response_ends_trial: true,
-  trial_duration: null,
-  trial_ends_after_video: true,
-  width: 1238,
-  height: 800,
-};
-keyboard_instructions.push(intro3);
-
-const intro4 = {
-  type: videoKeyboardResponse,
-  stimulus: [videos.introVideo4],
-  choices: ['l'],
-  response_allowed_while_playing: true,
-  response_ends_trial: true,
-  trial_duration: null,
-  trial_ends_after_video: true,
-  width: 1238,
-  height: 800,
-};
-keyboard_instructions.push(intro4);
-
-const ifKeyboardInstrutions = {
-  timeline: keyboard_instructions,
-  conditional_function: () => !enableButtons,
-};
-
-const loadSpaceBarTapDiv = () => {
-  const video = document.getElementById(
-    'jspsych-video-keyboard-response-stimulus'
-  );
-
-  if (document.getElementById('space-bar-tap') === null) {
-    const tapDiv = document.createElement('div');
-    tapDiv.id = 'space-bar-tap';
-    tapDiv.onclick = () => {
-      buttonClicked = true;
-      pressKey(' ');
-    };
-    video.insertAdjacentElement('afterend', tapDiv);
-  }
-};
-
-const loadPracticeDivs = () => {
-  const video = document.getElementById(
-    'jspsych-video-keyboard-response-stimulus'
-  );
-
-  if (document.getElementById('rdk-practice-image-left') === null) {
-    const leftImg = document.createElement('div');
-    leftImg.id = 'rdk-practice-image-left';
-    leftImg.onclick = () => {
-      buttonClicked = true;
-      pressKey('a');
-    };
-    video.insertAdjacentElement('afterend', leftImg);
-  }
-
-  if (document.getElementById('rdk-practice-image-right') === null) {
-    const rightImg = document.createElement('div');
-    rightImg.id = 'rdk-practice-image-right';
-    rightImg.onclick = () => {
-      buttonClicked = true;
-      pressKey('l');
-    };
-    video.insertAdjacentElement('afterend', rightImg);
-  }
-};
-
-const button_instructions = [];
-
-const introButton3 = {
-  type: videoKeyboardResponse,
-  stimulus: [videos.introButtonVideo3],
-  choices: ['l'],
-  response_allowed_while_playing: true,
-  response_ends_trial: true,
-  trial_duration: null,
-  trial_ends_after_video: true,
-  width: 1238,
-  height: 800,
-  on_load: loadPracticeDivs,
-};
-button_instructions.push(introButton3);
-
-const introButton4 = {
-  type: videoKeyboardResponse,
-  stimulus: [videos.introButtonVideo4],
-  choices: ['a'],
-  response_allowed_while_playing: true,
-  response_ends_trial: true,
-  trial_duration: null,
-  trial_ends_after_video: true,
-  width: 1238,
-  height: 800,
-  on_load: loadPracticeDivs,
-};
-button_instructions.push(introButton4);
-
-const ifButtonInstrutions = {
-  timeline: button_instructions,
-  conditional_function: () => enableButtons,
-};
-
-const intro5 = {
-  type: videoKeyboardResponse,
-  stimulus: [videos.introVideo5],
-  choices: [' '],
-  response_allowed_while_playing: true,
-  response_ends_trial: true,
-  trial_duration: null,
-  trial_ends_after_video: false,
-  on_load: loadSpaceBarTapDiv,
-  width: 1238,
-  height: 800,
-};
-
-const loadImages = () => {
-  const contentDiv = document.getElementById('jspsych-content');
-
-  const canvas = contentDiv.firstChild;
-  canvas.width = window.outerWidth;
-  canvas.height = window.outerHeight;
-
-  if (document.getElementById('rdk-image-left') === null) {
-    const leftDiv = document.createElement('div');
-    const leftImg = document.createElement('img');
-    leftDiv.appendChild(leftImg);
-    leftDiv.id = 'rdk-div-left';
-    leftImg.id = 'rdk-image-left';
-    leftImg.src = treeLeft;
-    if (enableButtons) {
-      leftDiv.onclick = () => {
-        buttonClicked = true;
-        pressKey('a');
-      };
-    }
-    contentDiv.insertAdjacentElement('afterend', leftDiv);
-  }
-
-  if (document.getElementById('rdk-image-right') === null) {
-    const rightDiv = document.createElement('div');
-    const rightImg = document.createElement('img');
-    rightDiv.appendChild(rightImg);
-    rightDiv.id = 'rdk-div-right';
-    rightImg.id = 'rdk-image-right';
-    rightImg.src = treeRight;
-    if (enableButtons) {
-      rightDiv.onclick = () => {
-        buttonClicked = true;
-        pressKey('l');
-      };
-    }
-    contentDiv.insertAdjacentElement('afterend', rightDiv);
-  }
-};
-
-const removeImages = () => {
-  const rightImg = document.getElementById('rdk-image-right');
-  const leftImg = document.getElementById('rdk-image-left');
-  if (rightImg !== null) {
-    rightImg.parentNode.removeChild(rightImg);
-  }
-  if (leftImg !== null) {
-    leftImg.parentNode.removeChild(leftImg);
-  }
-};
-
-// Multitudes users were having an issue with the fixation cross centering
-// We're still not sure why but for now, we hard-code a correction only for
-// multitudes users.
-let aperture_center_x = window.outerWidth / 2;
-let aperture_center_y = window.outerHeight / 2;
-if (pipeline === 'multitudes') {
-  aperture_center_x = 1920 / 2;
-  aperture_center_y = 1080 / 2;
-}
 
 // ---------Create trials---------
-function rdkWriteTrial(data) {
-  // eslint-disable-next-line no-param-reassign, eqeqeq
-  data.accuracy = data.correct_choice == data.response;
-  data.schoolId = schoolId;
-  data.classId = classId;
-  data.participant = participantId;
-  data.condition = jsPsych.timelineVariable('condition');
-  data.buttonClicked = buttonClicked;
-  data.pipeline = pipeline;
-  data.language = language;
-  data.studyId = studyId;
-  data.responseModality = responseModality;
-  firekit.writeTrial(data);
-  buttonClicked = false;
-}
-
-const rdkConfig = {
-  type: jsPsychRdk,
-  /*
-   * The Inter Trial Interval. You can either have no ITI, or change the display element
-   * to be the same color as the stimuli background to prevent flashing between trials.
-   */
-  timing_post_trial: 1000,
-  number_of_dots: 150, // Total number of dots in the aperture
-  coherent_direction: jsPsych.timelineVariable('coherent_direction'),
-  coherence: jsPsych.timelineVariable('coherence'),
-  correct_choice: [jsPsych.timelineVariable('correct_choice')],
-  RDK_type: 3, // The type of RDK used
-  aperture_type: 1, // Circle
-  aperture_center_x: aperture_center_x,
-  aperture_center_y: aperture_center_y,
-  aperture_width: 700, // Matches 14deg diameter
-  choices: ['a', 'l'], // Choices available to be keyed in by participant
-  fixation_cross: true,
-  // not sure if this is the correct scale - do the virtual chin to calibrate
-  fixation_cross_width: 30,
-  fixation_cross_height: 30,
-  fixation_cross_thickness: 7,
-  dot_color: 'black',
-  dot_radius: 3, // 3.4, matching 5 pixels from Elle's paper
-  move_distance: 6, // Speed parameter 6 seems the calculated speed but visually is not appealing
-  // Not sure where `dot_life` comes from 200ms is what we want the maximum dot life to be
-  dot_life: 12,
-  reinsert_type: 1,
-  on_load: loadImages,
-};
-
-// The test block where all the trials are nested. The properties here will
-// trickle down to all trials in the timeline unless they have their own
-// properties defined
-const testBlock = {
-  ...rdkConfig,
-  trial_duration: 6000, // Duration of each trial in ms
-  on_finish: (data) => {
-    data.blockType = 'test';
-    rdkWriteTrial(data);
-  },
-};
-
-// create practice block
-const practiceBlock = {
-  ...rdkConfig,
-  trial_duration: 15000, // Duration of each trial in ms
-  on_finish: (data) => {
-    data.blockType = 'practice';
-    rdkWriteTrial(data);
-  },
-};
-
-// Create an array of 2 different trials (different conditions)
-const practiceTrials = [
-  {
-    // Condition Practice
-    correct_choice: 'l',
-    coherent_direction: 0,
-    coherence: 0.8,
-    condition: '80% Right',
-  },
-  {
-    // Condition Practice
-    correct_choice: 'a',
-    coherent_direction: 180,
-    coherence: 0.8,
-    condition: '80% Left',
-  },
-];
-const practiceInfo = jsPsych.randomization.repeat(practiceTrials, 6);
-
-const trials = [
-  {
-    // Condition 1
-    correct_choice: 'a', // The correct answer for Condition 1
-    coherent_direction: 180, // The coherent direction for Condition 1 (dots move left)
-    coherence: 0.06,
-    condition: '6% Left',
-  },
-  {
-    // Condition 2
-    correct_choice: 'l',
-    coherent_direction: 0,
-    coherence: 0.06,
-    condition: '6% Right',
-  },
-  {
-    // Condition 3
-    correct_choice: 'a',
-    coherent_direction: 180,
-    coherence: 0.12,
-    condition: '12% Left',
-  },
-  {
-    // Condition 4
-    correct_choice: 'l',
-    coherent_direction: 0,
-    coherence: 0.12,
-    condition: '12% Right',
-  },
-  {
-    // Condition 5
-    correct_choice: 'a',
-    coherent_direction: 180,
-    coherence: 0.24,
-    condition: '24% Left',
-  },
-  {
-    // Condition 6
-    correct_choice: 'l',
-    coherent_direction: 0,
-    coherence: 0.24,
-    condition: '24% Right',
-  },
-  {
-    // Condition 7
-    correct_choice: 'a',
-    coherent_direction: 180,
-    coherence: 0.48,
-    condition: '48% Left',
-  },
-  {
-    // Condition 8
-    correct_choice: 'l',
-    coherent_direction: 0,
-    coherence: 0.48,
-    condition: '48% Right',
-  },
-  {
-    // Condition 9
-    correct_choice: 'a',
-    coherent_direction: 180,
-    coherence: 0.96,
-    condition: '96% Left',
-  },
-  {
-    // Condition 10
-    correct_choice: 'l',
-    coherent_direction: 0,
-    coherence: 0.96,
-    condition: '96% Right',
-  },
-];
 
 // Copied camelCase from preload.js
 export const camelCase = (inString) =>
@@ -670,147 +293,13 @@ const audioBlocks = {
 // Copied audioContent from preload.js
 export const audioContent = preloadObj2contentObj(audioBlocks);
 
-const feedbackBlock = {
-  type: jsPsychAudioKeyboardResponse,
-  stimulus: function () {
-    const lastTrialAccuracy = jsPsych.data
-      .getLastTrialData()
-      .values()[0].accuracy;
-
-    if (lastTrialAccuracy) {
-      return audioContent.feedbackCorrect;
-    } else {
-      return audioContent.feedbackIncorrect;
-    }
-  },
-  choices: 'NO_KEYS',
-  trial_ends_after_audio: true,
-  data: {
-    task: 'feedback',
-  },
-};
-
-// Inter block interval image
-const IBI1 = {
-  type: videoKeyboardResponse,
-  stimulus: [videos.levelUpVideo1],
-  prompt:
-    '<p>Press the Spacebar when you are ready to proceed. Remember to sit at one arm distance from the screen.</p>',
-  choices: [' '],
-  response_allowed_while_playing: true,
-  trial_duration: null,
-  on_load: () => {
-    removeImages();
-    loadSpaceBarTapDiv();
-  },
-  width: 1238,
-  height: 800,
-};
-
-const IBI2 = {
-  type: videoKeyboardResponse,
-  stimulus: [videos.levelUpVideo2],
-  prompt:
-    '<p>Press the Spacebar when you are ready to proceed. Remember to sit at one arm distance from the screen.</p>',
-  choices: [' '],
-  response_allowed_while_playing: true,
-  trial_duration: null,
-  on_load: () => {
-    removeImages();
-    loadSpaceBarTapDiv();
-  },
-  width: 1238,
-  height: 800,
-};
-
-const IBI3 = {
-  type: videoKeyboardResponse,
-  stimulus: [videos.levelUpVideo3],
-  prompt:
-    '<p>Press the Spacebar when you are ready to proceed. Remember to sit at one arm distance from the screen.</p>',
-  choices: [' '],
-  response_allowed_while_playing: true,
-  trial_duration: null,
-  on_load: () => {
-    removeImages();
-    loadSpaceBarTapDiv();
-  },
-  width: 1238,
-  height: 800,
-};
-
-const IBI4 = {
-  type: videoKeyboardResponse,
-  stimulus: [videos.levelUpVideo4],
-  prompt:
-    '<p>Press the Spacebar when you are ready to proceed. Remember to sit at one arm distance from the screen.</p>',
-  choices: [' '],
-  response_allowed_while_playing: true,
-  on_load: () => {
-    removeImages();
-    loadSpaceBarTapDiv();
-  },
-  width: 1238,
-  height: 800,
-};
-
-const IBI5 = {
-  type: videoKeyboardResponse,
-  stimulus: [videos.levelUpVideo5],
-  prompt:
-    '<p>Press the Spacebar when you are ready to proceed. Remember to sit at one arm distance from the screen.</p>',
-  choices: [' '],
-  response_allowed_while_playing: true,
-  trial_duration: null,
-  on_load: () => {
-    removeImages();
-    loadSpaceBarTapDiv();
-  },
-  width: 1238,
-  height: 800,
-};
-
-const IBIEnd = {
-  type: videoKeyboardResponse,
-  stimulus: [videos.endVideo],
-  response_allowed_while_playing: true,
-  trial_ends_after_video: true,
-  choices: [' '],
-  trial_duration: null,
-  on_load: () => {
-    removeImages();
-    loadSpaceBarTapDiv();
-  },
-  width: 1238,
-  height: 800,
-  on_finish: async () => {
-    await firekit.finishRun();
-  },
-};
 
 // ---------Prepare the main timeline---------
-const PracticeProcedure = {
-  timeline: [practiceBlock, feedbackBlock],
-  timeline_variables: practiceInfo,
-  randomize_order: true,
-  repetition: 1,
-};
+import { enterFullscreen } from './experiment/trials/fullScreen';
+import { introductionTrials, ifKeyboardInstrutions, ifButtonInstrutions, prePractice } from './experiment/trials/introduction';
+import { PracticeProcedure, createMotionCohProcedure } from './experiment/trials/practice';
+import { IBI1, IBI2, IBI3, IBI4, IBI5, IBIEnd } from './experiment/trials/ibi';
 
-// Multiply based on how many trials you need and randomize the trial order
-const createMotionCohProcedure = (conditionToOmit) => {
-  const repeats = new Array(trials.length).fill(2);
-  if (conditionToOmit !== null) {
-    repeats[conditionToOmit * 2] = 0;
-    repeats[conditionToOmit * 2 + 1] = 0;
-  }
-  const trialInfo = jsPsych.randomization.repeat(trials, repeats);
-  return {
-    timeline: [testBlock, feedbackBlock],
-    timeline_variables: trialInfo,
-    randomize_order: true,
-    repetition: 1,
-  };
-};
 
 const timeline = [];
 
@@ -829,18 +318,14 @@ timeline.push(preload);
 timeline.push(preloadAudio);
 timeline.push(ifGetPid);
 
-// store info about the experiment session:
-timeline.push({
-  type: fullScreen,
-  fullscreen_mode: true,
-});
+timeline.push(enterFullscreen); // TODO: add proper "do you want to enter fullscreen" message
 
-timeline.push(welcome);
-timeline.push(intro1);
-timeline.push(intro2);
+
+timeline.push(introductionTrials);
 timeline.push(ifKeyboardInstrutions);
 timeline.push(ifButtonInstrutions);
-timeline.push(intro5);
+timeline.push(prePractice);
+
 
 timeline.push(PracticeProcedure);
 timeline.push(IBI1);
@@ -867,3 +352,41 @@ if (isOnPavlovia) {
 
 // ---------Run the experiment---------
 jsPsych.run(timeline);
+
+
+import store from "store2";
+import { initConfig } from "./experiment/config/config";
+import { buildExperiment } from "./experiment/experiment";
+import { waitFor } from "./experiment/experimentHelpers";
+
+
+
+class RoarMP {
+    constructor(firekit, gameParams, userParams, displayElement) {
+      // TODO: Add validation of params so that if any are missing, we throw an error
+      this.gameParams = gameParams;
+      this.userParams = userParams;
+      this.firekit = firekit;
+      this.displayElement = displayElement;
+    }
+  
+    async init() {
+      await this.firekit.startRun();
+      const config = await initConfig(
+        this.firekit,
+        {...this.gameParams, ...this.userParams},
+        this.displayElement,
+      );
+      store.session.set("config", config);
+      return buildExperiment(config);
+    }
+  
+    async run() {
+      const { jsPsych, timeline } = await this.init();
+      jsPsych.run(timeline);
+  
+      await waitFor(() => this.firekit.run.completed === true);
+    }
+  }
+
+export default RoarMP
