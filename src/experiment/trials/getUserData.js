@@ -4,7 +4,7 @@ import jsPsychSurveyHtmlForm from "@jspsych/plugin-survey-html-form";
 import jsPsychAudioKeyboardResponse from "@jspsych/plugin-audio-keyboard-response";
 import store from 'store2';
 import { enterFullscreen } from './fullScreen';
-import { mediaAssets } from '../experiment';
+import { mediaAssets } from '../loadassets';
 import i18next from 'i18next';
 import '../i18n'
 

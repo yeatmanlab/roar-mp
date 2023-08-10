@@ -1,77 +1,50 @@
 import { initJsPsych } from 'jspsych';
-import surveyText from '@jspsych/plugin-survey-text';
-import fullScreen from '@jspsych/plugin-fullscreen';
 import htmlKeyboardResponse from '@jspsych/plugin-html-keyboard-response';
 import videoKeyboardResponse from '@jspsych/plugin-video-keyboard-response';
-import jsPsychRdk from '@jspsych-contrib/plugin-rdk';
-import jsPsychPreload from '@jspsych/plugin-preload';
 import { pressKey } from '@jspsych/test-utils';
 import 'jspsych/css/jspsych.css';
 import 'regenerator-runtime/runtime';
-import { RoarFirekit } from '@bdelab/roar-firekit';
+import { mediaAssets } from '../loadassets';
+import { camelCase } from 'lodash';
 
-import introVideo1 from '../../video/Honey_Hunt_Intro_1.mp4';
-import introVideo2 from '../../video/Honey_Hunt_Intro_2.mp4';
-import introVideo3 from '../../video/Honey_Hunt_Intro_3.mp4';
-import introVideo4 from '../../video/Honey_Hunt_Intro_4.mp4';
-import introButtonVideo3 from '../../video/Honey_Hunt_Intro_Button_3.mp4';
-import introButtonVideo4 from '../../video/Honey_Hunt_Intro_Button_4.mp4';
-import introVideo5 from '../../video/Honey_Hunt_Intro_5.mp4';
-import endVideo from '../../video/Honey_Hunt_End.mp4';
-import levelUpVideo1 from '../../video/Honey_Hunt_Level_Up_1.mp4';
-import levelUpVideo2 from '../../video/Honey_Hunt_Level_Up_2.mp4';
-import levelUpVideo3 from '../../video/Honey_Hunt_Level_Up_3.mp4';
-import levelUpVideo4 from '../../video/Honey_Hunt_Level_Up_4.mp4';
-import levelUpVideo5 from '../../video/Honey_Hunt_Level_Up_5.mp4';
-
-import introVideo1Es from '../../video/Spanish_Honey_Hunt_Intro_1.mp4';
-import introVideo2Es from '../../video/Spanish_Honey_Hunt_Intro_2.mp4';
-import introVideo3Es from '../../video/Spanish_Honey_Hunt_Intro_3.mp4';
-import introVideo4Es from '../../video/Spanish_Honey_Hunt_Intro_4.mp4';
-import introButtonVideo3Es from '../../video/Spanish_Honey_Hunt_Intro_Button_3.mp4';
-import introButtonVideo4Es from '../../video/Spanish_Honey_Hunt_Intro_Button_4.mp4';
-import introVideo5Es from '../../video/Spanish_Honey_Hunt_Intro_5.mp4';
-import endVideoEs from '../../video/Spanish_Honey_Hunt_End.mp4';
-import levelUpVideo1Es from '../../video/Spanish_Honey_Hunt_Level_Up_1.mp4';
-import levelUpVideo2Es from '../../video/Spanish_Honey_Hunt_Level_Up_2.mp4';
-import levelUpVideo3Es from '../../video/Spanish_Honey_Hunt_Level_Up_3.mp4';
-import levelUpVideo4Es from '../../video/Spanish_Honey_Hunt_Level_Up_4.mp4';
-import levelUpVideo5Es from '../../video/Spanish_Honey_Hunt_Level_Up_5.mp4';
 const jsPsychForURL = initJsPsych();
 const language = jsPsychForURL.data.getURLVariable('language') || 'en';
-
+const responseModality =
+  jsPsychForURL.data.getURLVariable('responseModality') || 'touch';
+export const enableButtons = responseModality === 'touch' ? true : false;
+let buttonClicked = false;
 
 export const videos =
   language === 'es'
     ? {
-        introVideo1: introVideo1Es,
-        introVideo2: introVideo2Es,
-        introVideo3: introVideo3Es,
-        introVideo4: introVideo4Es,
-        introButtonVideo3: introButtonVideo3Es,
-        introButtonVideo4: introButtonVideo4Es,
-        introVideo5: introVideo5Es,
-        endVideo: endVideoEs,
-        levelUpVideo1: levelUpVideo1Es,
-        levelUpVideo2: levelUpVideo2Es,
-        levelUpVideo3: levelUpVideo3Es,
-        levelUpVideo4: levelUpVideo4Es,
-        levelUpVideo5: levelUpVideo5Es,
+        introVideo1: mediaAssets.video[camelCase("Spanish_Honey_Hunt_Intro_1")],
+        introVideo2: mediaAssets.video[camelCase("Spanish_Honey_Hunt_Intro_2")],
+        introVideo3: mediaAssets.video[camelCase("Spanish_Honey_Hunt_Intro_3")],
+        introVideo4: mediaAssets.video[camelCase("Spanish_Honey_Hunt_Intro_4")],
+        introButtonVideo3: mediaAssets.video[camelCase("Spanish_Honey_Hunt_Intro_Button_3")],
+        introButtonVideo4: mediaAssets.video[camelCase("Spanish_Honey_Hunt_Intro_Button_4")],
+        introVideo5: mediaAssets.video[camelCase("Spanish_Honey_Hunt_Intro_5")],
+        endVideo: mediaAssets.video[camelCase("Spanish_Honey_Hunt_End")],
+        levelUpVideo1: mediaAssets.video[camelCase("Spanish_Honey_Hunt_Level_Up_1")],
+        levelUpVideo2: mediaAssets.video[camelCase("Spanish_Honey_Hunt_Level_Up_2")],
+        levelUpVideo3: mediaAssets.video[camelCase("Spanish_Honey_Hunt_Level_Up_3")],
+        levelUpVideo4: mediaAssets.video[camelCase("Spanish_Honey_Hunt_Level_Up_4")],
+        levelUpVideo5: mediaAssets.video[camelCase("Spanish_Honey_Hunt_Level_Up_5")],
       }
     : {
-        introVideo1,
-        introVideo2,
-        introVideo3,
-        introVideo4,
-        introButtonVideo3,
-        introButtonVideo4,
-        introVideo5,
-        endVideo,
-        levelUpVideo1,
-        levelUpVideo2,
-        levelUpVideo3,
-        levelUpVideo4,
-        levelUpVideo5,
+        introVideo1: mediaAssets.video[camelCase("Honey_Hunt_Intro_1")],
+        introVideo2: mediaAssets.video[camelCase("Honey_Hunt_Intro_2")],
+        introVideo3: mediaAssets.video[camelCase("Honey_Hunt_Intro_3")],
+        introVideo4: mediaAssets.video[camelCase("Honey_Hunt_Intro_4")],
+        introButtonVideo3: mediaAssets.video[camelCase("Honey_Hunt_Intro_Button_3")],
+        introButtonVideo4: mediaAssets.video[camelCase("Honey_Hunt_Intro_Button_4")],
+        introVideo5: mediaAssets.video[camelCase("Honey_Hunt_Intro_5")],
+        endVideo: mediaAssets.video[camelCase("Honey_Hunt_End")],
+        levelUpVideo1: mediaAssets.video[camelCase("Honey_Hunt_Level_Up_1")],
+        levelUpVideo2: mediaAssets.video[camelCase("Honey_Hunt_Level_Up_2")],
+        levelUpVideo3: mediaAssets.video[camelCase("Honey_Hunt_Level_Up_3")],
+        levelUpVideo4: mediaAssets.video[camelCase("Honey_Hunt_Level_Up_4")],
+        levelUpVideo5: mediaAssets.video[camelCase("Honey_Hunt_Level_Up_5")],
       };
 
 const loadPracticeDivs = () => {
@@ -135,6 +108,7 @@ const intro1 = {
   trial_duration: null,
   width: 1238,
   height: 800,
+  on_finish: console.log(mediaAssets),
 };
 
 const intro2 = {
@@ -146,6 +120,11 @@ const intro2 = {
   width: 1238,
   height: 800,
 };
+
+export const introductionTrials = {
+  timeline: [welcome, intro1, intro2],
+}
+
 
 const intro3 = {
   type: videoKeyboardResponse,
@@ -171,12 +150,6 @@ const intro4 = {
   height: 800,
 };
 
-export const introductionTrials = {
-  timeline: [welcome, intro1, intro2],
-}
-
-
-
 const keyboard_instructions = []
 keyboard_instructions.push(intro3)
 keyboard_instructions.push(intro4)
@@ -186,9 +159,6 @@ export const ifKeyboardInstrutions = {
   conditional_function: () => !enableButtons,
 }
 
-
-
-const button_instructions = [];
 
 const introButton3 = {
   type: videoKeyboardResponse,
@@ -202,7 +172,7 @@ const introButton3 = {
   height: 800,
   on_load: loadPracticeDivs,
 };
-button_instructions.push(introButton3);
+
 
 const introButton4 = {
   type: videoKeyboardResponse,
@@ -216,6 +186,8 @@ const introButton4 = {
   height: 800,
   on_load: loadPracticeDivs,
 };
+const button_instructions = [];
+button_instructions.push(introButton3);
 button_instructions.push(introButton4);
 
 export const ifButtonInstrutions = {
@@ -223,12 +195,10 @@ export const ifButtonInstrutions = {
   conditional_function: () => enableButtons,
 };
 
-
-
-const intro5 = {
+export const intro5 = {
   type: videoKeyboardResponse,
   stimulus: [videos.introVideo5],
-  choices: [' '],
+  choices: 'ALL_KEYS',
   response_allowed_while_playing: true,
   response_ends_trial: true,
   trial_duration: null,
@@ -237,7 +207,3 @@ const intro5 = {
   width: 1238,
   height: 800,
 };
-
-export const prePractice = {
-  timeline: intro5,
-}

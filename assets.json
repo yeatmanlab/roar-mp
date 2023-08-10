@@ -1,0 +1,40 @@
+{
+  "default": {
+      "languageSpecific": {
+          "device": [],
+          "shared": []
+      },
+      "shared": [
+        "Honey_Hunt_Intro_1.mp4", 
+        "Honey_Hunt_Intro_2.mp4", 
+        "Honey_Hunt_Intro_3.mp4", 
+        "Honey_Hunt_Intro_4.mp4", 
+        "Honey_Hunt_Intro_5.mp4",
+        "Honey_Hunt_Intro_Button_3.mp4", 
+        "Honey_Hunt_Intro_Button_4.mp4", 
+        "Honey_Hunt_End.mp4",
+        "Spanish_Honey_Hunt_Intro_1.mp4", 
+        "Spanish_Honey_Hunt_Intro_2.mp4", 
+        "Spanish_Honey_Hunt_Intro_3.mp4", 
+        "Spanish_Honey_Hunt_Intro_4.mp4",
+        "Spanish_Honey_Hunt_Intro_Button_3.mp4", 
+        "Spanish_Honey_Hunt_Intro_Button_4.mp4", 
+        "Spanish_Honey_Hunt_Intro_5.mp4",
+        "Spanish_Honey_Hunt_End.mp4",
+        "Honey_Hunt_Level_Up_1.mp4", 
+        "Honey_Hunt_Level_Up_2.mp4", 
+        "Honey_Hunt_Level_Up_3.mp4",
+        "Honey_Hunt_Level_Up_4.mp4", 
+        "Honey_Hunt_Level_Up_5.mp4",
+        "Spanish_Honey_Hunt_Level_Up_1.mp4", 
+        "Spanish_Honey_Hunt_Level_Up_2.mp4", 
+        "Spanish_Honey_Hunt_Level_Up_3.mp4",
+        "Spanish_Honey_Hunt_Level_Up_4.mp4", 
+        "Spanish_Honey_Hunt_Level_Up_5.mp4",
+        "tree-left.png", 
+        "tree-right.png", 
+        "feedbackCorrect.mp3", 
+        "feedbackIncorrect.mp3"
+        ]
+  }
+}

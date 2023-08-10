@@ -1,6 +1,33 @@
 import { videos } from "./introduction";
 import videoKeyboardResponse from '@jspsych/plugin-video-keyboard-response';
 
+const removeImages = () => {
+  const rightImg = document.getElementById('rdk-image-right');
+  const leftImg = document.getElementById('rdk-image-left');
+  if (rightImg !== null) {
+    rightImg.parentNode.removeChild(rightImg);
+  }
+  if (leftImg !== null) {
+    leftImg.parentNode.removeChild(leftImg);
+  }
+};
+
+const loadSpaceBarTapDiv = () => {
+  const video = document.getElementById(
+    'jspsych-video-keyboard-response-stimulus'
+  );
+
+  if (document.getElementById('space-bar-tap') === null) {
+    const tapDiv = document.createElement('div');
+    tapDiv.id = 'space-bar-tap';
+    tapDiv.onclick = () => {
+      buttonClicked = true;
+      pressKey(' ');
+    };
+    video.insertAdjacentElement('afterend', tapDiv);
+  }
+};
+
 // Inter block interval image
 export const IBI1 = {
   type: videoKeyboardResponse,
