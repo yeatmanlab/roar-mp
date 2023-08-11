@@ -1,4 +1,5 @@
-/* eslint-disable import/prefer-default-export */
+// TODO: This scoring paradigm is from SRE and needs to be changed for MP.
+
 import _fromPairs from "lodash/fromPairs";
 import _omit from "lodash/omit";
 import _toPairs from "lodash/toPairs";

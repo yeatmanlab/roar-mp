@@ -5,7 +5,6 @@ import { pressKey } from '@jspsych/test-utils';
 import 'jspsych/css/jspsych.css';
 import 'regenerator-runtime/runtime';
 import { mediaAssets } from '../loadassets';
-import { camelCase } from 'lodash';
 
 const jsPsychForURL = initJsPsych();
 const language = jsPsychForURL.data.getURLVariable('language') || 'en';
@@ -13,39 +12,6 @@ const responseModality =
   jsPsychForURL.data.getURLVariable('responseModality') || 'touch';
 export const enableButtons = responseModality === 'touch' ? true : false;
 let buttonClicked = false;
-
-export const videos =
-  language === 'es'
-    ? {
-        introVideo1: mediaAssets.video[camelCase("Spanish_Honey_Hunt_Intro_1")],
-        introVideo2: mediaAssets.video[camelCase("Spanish_Honey_Hunt_Intro_2")],
-        introVideo3: mediaAssets.video[camelCase("Spanish_Honey_Hunt_Intro_3")],
-        introVideo4: mediaAssets.video[camelCase("Spanish_Honey_Hunt_Intro_4")],
-        introButtonVideo3: mediaAssets.video[camelCase("Spanish_Honey_Hunt_Intro_Button_3")],
-        introButtonVideo4: mediaAssets.video[camelCase("Spanish_Honey_Hunt_Intro_Button_4")],
-        introVideo5: mediaAssets.video[camelCase("Spanish_Honey_Hunt_Intro_5")],
-        endVideo: mediaAssets.video[camelCase("Spanish_Honey_Hunt_End")],
-        levelUpVideo1: mediaAssets.video[camelCase("Spanish_Honey_Hunt_Level_Up_1")],
-        levelUpVideo2: mediaAssets.video[camelCase("Spanish_Honey_Hunt_Level_Up_2")],
-        levelUpVideo3: mediaAssets.video[camelCase("Spanish_Honey_Hunt_Level_Up_3")],
-        levelUpVideo4: mediaAssets.video[camelCase("Spanish_Honey_Hunt_Level_Up_4")],
-        levelUpVideo5: mediaAssets.video[camelCase("Spanish_Honey_Hunt_Level_Up_5")],
-      }
-    : {
-        introVideo1: mediaAssets.video[camelCase("Honey_Hunt_Intro_1")],
-        introVideo2: mediaAssets.video[camelCase("Honey_Hunt_Intro_2")],
-        introVideo3: mediaAssets.video[camelCase("Honey_Hunt_Intro_3")],
-        introVideo4: mediaAssets.video[camelCase("Honey_Hunt_Intro_4")],
-        introButtonVideo3: mediaAssets.video[camelCase("Honey_Hunt_Intro_Button_3")],
-        introButtonVideo4: mediaAssets.video[camelCase("Honey_Hunt_Intro_Button_4")],
-        introVideo5: mediaAssets.video[camelCase("Honey_Hunt_Intro_5")],
-        endVideo: mediaAssets.video[camelCase("Honey_Hunt_End")],
-        levelUpVideo1: mediaAssets.video[camelCase("Honey_Hunt_Level_Up_1")],
-        levelUpVideo2: mediaAssets.video[camelCase("Honey_Hunt_Level_Up_2")],
-        levelUpVideo3: mediaAssets.video[camelCase("Honey_Hunt_Level_Up_3")],
-        levelUpVideo4: mediaAssets.video[camelCase("Honey_Hunt_Level_Up_4")],
-        levelUpVideo5: mediaAssets.video[camelCase("Honey_Hunt_Level_Up_5")],
-      };
 
 const loadPracticeDivs = () => {
   const video = document.getElementById(
@@ -89,7 +55,7 @@ const loadSpaceBarTapDiv = () => {
   }
 };
 
-const welcome = {
+export const welcome = {
   type: htmlKeyboardResponse,
   on_start: () => (document.body.style.backgroundColor = 'gray'),
   stimulus:
@@ -99,36 +65,22 @@ const welcome = {
 };
 
 // ---------Create instructions - interactive---------
+const introTrialData = [{ stimulus: mediaAssets.video.honeyHuntIntro1 }, { stimulus: mediaAssets.video.honeyHuntIntro2 }]
 
-const intro1 = {
-  type: videoKeyboardResponse,
-  stimulus: [videos.introVideo1],
-  choices: 'NO_KEYS',
-  trial_ends_after_video: true,
-  trial_duration: null,
-  width: 1238,
-  height: 800,
-  on_finish: console.log(mediaAssets),
-};
-
-const intro2 = {
-  type: videoKeyboardResponse,
-  stimulus: [videos.introVideo2],
-  choices: 'NO_KEYS',
-  trial_ends_after_video: true,
-  trial_duration: null,
-  width: 1238,
-  height: 800,
-};
-
-export const introductionTrials = {
-  timeline: [welcome, intro1, intro2],
-}
-
+export const introTrialsMapped = introTrialData.map(trial => (
+  {
+    type: videoKeyboardResponse,
+    stimulus: () => [trial.stimulus],
+    choices: 'NO_KEYS',
+    trial_ends_after_video: true,
+    trial_duration: null,
+    width: 1238,
+    height: 800,
+  }));
 
 const intro3 = {
   type: videoKeyboardResponse,
-  stimulus: [videos.introVideo3],
+  stimulus: [mediaAssets.video.honeyHuntIntro3],
   choices: ['a'],
   response_allowed_while_playing: true,
   response_ends_trial: true,
@@ -140,7 +92,7 @@ const intro3 = {
 
 const intro4 = {
   type: videoKeyboardResponse,
-  stimulus: [videos.introVideo4],
+  stimulus: [mediaAssets.video.honeyHuntIntro4],
   choices: ['l'],
   response_allowed_while_playing: true,
   response_ends_trial: true,
@@ -159,10 +111,9 @@ export const ifKeyboardInstrutions = {
   conditional_function: () => !enableButtons,
 }
 
-
 const introButton3 = {
   type: videoKeyboardResponse,
-  stimulus: [videos.introButtonVideo3],
+  stimulus: [mediaAssets.video.honeyHuntIntroButton3],
   choices: ['l'],
   response_allowed_while_playing: true,
   response_ends_trial: true,
@@ -176,7 +127,7 @@ const introButton3 = {
 
 const introButton4 = {
   type: videoKeyboardResponse,
-  stimulus: [videos.introButtonVideo4],
+  stimulus: [mediaAssets.video.honeyHuntIntroButton4],
   choices: ['a'],
   response_allowed_while_playing: true,
   response_ends_trial: true,
@@ -197,7 +148,7 @@ export const ifButtonInstrutions = {
 
 export const intro5 = {
   type: videoKeyboardResponse,
-  stimulus: [videos.introVideo5],
+  stimulus: () => [mediaAssets.video.honeyHuntIntro5],
   choices: 'ALL_KEYS',
   response_allowed_while_playing: true,
   response_ends_trial: true,

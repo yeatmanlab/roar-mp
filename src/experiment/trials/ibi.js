@@ -1,4 +1,5 @@
-import { videos } from "./introduction";
+import i18next from "i18next";
+import { mediaAssets } from "../loadassets";
 import videoKeyboardResponse from '@jspsych/plugin-video-keyboard-response';
 
 const removeImages = () => {
@@ -28,89 +29,29 @@ const loadSpaceBarTapDiv = () => {
   }
 };
 
-// Inter block interval image
-export const IBI1 = {
-  type: videoKeyboardResponse,
-  stimulus: [videos.levelUpVideo1],
-  prompt:
-    '<p>Press the Spacebar when you are ready to proceed. Remember to sit at one arm distance from the screen.</p>',
-  choices: [' '],
-  response_allowed_while_playing: true,
-  trial_duration: null,
-  on_load: () => {
-    removeImages();
-    loadSpaceBarTapDiv();
-  },
-  width: 1238,
-  height: 800,
-};
+const ibTrialData = [{ stimulus: mediaAssets.video.honeyHuntLevelUp1 },
+  { stimulus: mediaAssets.video.honeyHuntLevelUp2 }, { stimulus: mediaAssets.video.honeyHuntLevelUp3 },
+  { stimulus: mediaAssets.video.honeyHuntLevelUp4 }, { stimulus: mediaAssets.video.honeyHuntLevelUp5 }]
 
-export const IBI2 = {
-  type: videoKeyboardResponse,
-  stimulus: [videos.levelUpVideo2],
-  prompt:
-    '<p>Press the Spacebar when you are ready to proceed. Remember to sit at one arm distance from the screen.</p>',
-  choices: [' '],
-  response_allowed_while_playing: true,
-  trial_duration: null,
-  on_load: () => {
-    removeImages();
-    loadSpaceBarTapDiv();
-  },
-  width: 1238,
-  height: 800,
-};
-
-export const IBI3 = {
-  type: videoKeyboardResponse,
-  stimulus: [videos.levelUpVideo3],
-  prompt:
-    '<p>Press the Spacebar when you are ready to proceed. Remember to sit at one arm distance from the screen.</p>',
-  choices: [' '],
-  response_allowed_while_playing: true,
-  trial_duration: null,
-  on_load: () => {
-    removeImages();
-    loadSpaceBarTapDiv();
-  },
-  width: 1238,
-  height: 800,
-};
-
-export const IBI4 = {
-  type: videoKeyboardResponse,
-  stimulus: [videos.levelUpVideo4],
-  prompt:
-    '<p>Press the Spacebar when you are ready to proceed. Remember to sit at one arm distance from the screen.</p>',
-  choices: [' '],
-  response_allowed_while_playing: true,
-  on_load: () => {
-    removeImages();
-    loadSpaceBarTapDiv();
-  },
-  width: 1238,
-  height: 800,
-};
-
-export const IBI5 = {
-  type: videoKeyboardResponse,
-  stimulus: [videos.levelUpVideo5],
-  prompt:
-    '<p>Press the Spacebar when you are ready to proceed. Remember to sit at one arm distance from the screen.</p>',
-  choices: [' '],
-  response_allowed_while_playing: true,
-  trial_duration: null,
-  on_load: () => {
-    removeImages();
-    loadSpaceBarTapDiv();
-  },
-  width: 1238,
-  height: 800,
-};
+export const trialsMapped = ibTrialData.map(trial => (
+  {
+    type: videoKeyboardResponse,
+    stimulus: () => [trial.stimulus],
+    prompt: () => i18next.t("stimulusPrompt"),
+    choices: [' '],
+    response_allowed_while_playing: true,
+    trial_duration: null,
+    on_load: () => {
+      removeImages();
+      loadSpaceBarTapDiv();
+    },
+    width: 1238,
+    height: 800,
+  }));
 
 export const IBIEnd = {
   type: videoKeyboardResponse,
-  stimulus: [videos.endVideo],
+  stimulus: () => [mediaAssets.video.honeyHuntEnd],
   response_allowed_while_playing: true,
   trial_ends_after_video: true,
   choices: [' '],
@@ -121,7 +62,4 @@ export const IBIEnd = {
   },
   width: 1238,
   height: 800,
-  on_finish: async () => {
-    await firekit.finishRun();
-  },
 };

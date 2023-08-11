@@ -67,9 +67,6 @@ export const initConfig = async (firekit, params, displayElement) => {
 
   const config = {
     pid,
-    // studyId: studyId || (taskVariant + "-" + userMode),
-    // classId,
-    // schoolId: schoolId || prefix,
     labId,
     userMode,
     taskVariant: taskVariant || 'pilot',
