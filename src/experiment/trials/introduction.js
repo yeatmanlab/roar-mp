@@ -4,13 +4,8 @@ import videoKeyboardResponse from '@jspsych/plugin-video-keyboard-response';
 import { pressKey } from '@jspsych/test-utils';
 import 'jspsych/css/jspsych.css';
 import 'regenerator-runtime/runtime';
-import { mediaAssets } from '../loadassets';
-
-const jsPsychForURL = initJsPsych();
-const language = jsPsychForURL.data.getURLVariable('language') || 'en';
-const responseModality =
-  jsPsychForURL.data.getURLVariable('responseModality') || 'touch';
-export const enableButtons = responseModality === 'touch' ? true : false;
+import { mediaAssets } from '../experimentHelpers';
+import { enableButtons } from '../../../serve/serve';
 let buttonClicked = false;
 
 const loadPracticeDivs = () => {

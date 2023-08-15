@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { mediaAssets } from "../loadassets";
+import { mediaAssets } from "../experimentHelpers";
 import videoKeyboardResponse from '@jspsych/plugin-video-keyboard-response';
 
 const removeImages = () => {

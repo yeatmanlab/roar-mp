@@ -7,5 +7,13 @@
       "prompt": "The experiment will switch to full screen mode. <br/> Click the button to continue.",
       "buttonText": "Continue"
     },
-    "stimulusPrompt": "Press the Spacebar when you are ready to proceed. Remember to sit at one arm distance from the screen."
+    "stimulusPrompt": "Press the Spacebar when you are ready to proceed. Remember to sit at one arm distance from the screen.",
+    "introduction": {
+      "gradeSelect": {
+        "text1": "What grade are you in?",
+        "text2": "To get started, press the number key on your keyboard of the grade you are in.",
+        "text3": "For example, you would press “4” if you are in 4th grade.",
+        "text4": "Press <span class='yellow'>the number key </span> of the grade you are in to continue "
+      }
+    }
 }

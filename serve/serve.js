@@ -7,14 +7,20 @@ import { onAuthStateChanged, signInAnonymously } from 'firebase/auth'
 import "regenerator-runtime/runtime.js";
 
 //@ts-ignore
-const queryString = new URL(window.location).search;
-const urlParams = new URLSearchParams(queryString);
-const pid = urlParams.get('participant') || null;
-const studyId = urlParams.get('studyId') || null;
-const classId = urlParams.get('classId') || null;
-const schoolId = urlParams.get('schoolId') || null;
-const labId = urlParams.get('labId') || null;
-const userMode = urlParams.get('mode') || "default";
+export const queryString = new URL(window.location).search;
+export const urlParams = new URLSearchParams(queryString);
+export const pid = urlParams.get('participant') || null;
+export const studyId = urlParams.get('studyId') || null;
+export const classId = urlParams.get('classId') || null;
+export const schoolId = urlParams.get('schoolId') || null;
+export const labId = urlParams.get('labId') || null;
+export const userMode = urlParams.get('mode') || "default";
+export const redirectTo = urlParams.get('redirectTo') || null;
+export const pipeline = urlParams.get('pipeline') || 'rc';
+export const language = urlParams.get('language') || 'en';
+export const responseModality = urlParams.get('responseModality') || 'touch';
+export const enableButtons = responseModality === 'touch' ? true : false;
+
 /* 4 modes
 default: no-survey + story (if < grade 6) and no-story (if >= grade 6)
 demo: survey + story all grades

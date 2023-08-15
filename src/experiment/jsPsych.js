@@ -16,19 +16,20 @@ import store from "store2";
 
 
 // Redirects users to proper page based on parameters
-const redirect = () => {
-    const config = store.session.get('config')
-
-    if (config.gameToken === null) {
-        if (config.taskVariant === "school") {
-        window.location.href = `https://reading.stanford.edu?g=1265&c=1`;
-        } else {
-        window.location.href = `https://roar.stanford.edu`; }
-    } else {
-        // Else, redirect back to the dashboard with the game token that
-        // was originally provided
-        window.location.href = `https://reading.stanford.edu/?g=${config.gameToken}&c=1`;
+export const redirect = (redirectTo) => {
+  if (redirectTo === 'refresh') {
+    window.location.reload();
+  } else {
+    if (pipeline === 'multitudes') {
+      window.location.reload();
+    } else if (pipeline === 'rc') {
+      window.location.href = 'https://reading.stanford.edu/?g=796&c=1';
+    } else if (pipeline === 'school') {
+      window.location.href = 'https://reading.stanford.edu/?g=796&c=1';
+    } else if (pipeline === 'ucsfdc') {
+      window.location.href = 'https://reading.stanford.edu/?g=796&c=1';
     }
+  }
 };
 
 export const jsPsych = initJsPsych({

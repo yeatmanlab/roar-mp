@@ -1,5 +1,5 @@
 import store from "store2";
-import { getUserDataTimeline } from '../trials/getUserData';
+import { getUserDataTimeline } from "../trials/getUserData";
 import _omitBy from "lodash/omitBy.js";
 import _isNull from "lodash/isNull.js";
 import _isUndefined from "lodash/isUndefined.js";
