@@ -199,8 +199,18 @@ const preloadAudio = {
   audio: [feedbackCorrect, feedbackIncorrect],
 };
 
+function getLanguage(language){
+  if(language === 'en'){
+    return 'English';
+  }
+  else{
+    return 'Spanish';
+  }
+}
+
 const getPid = {
   type: surveyText,
+  preamble: `ROAR-MP <br> Language: ${getLanguage(language)}`,
   questions: [
     {
       prompt: 'Participant ID:',
